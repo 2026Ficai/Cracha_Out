@@ -134,6 +134,11 @@ const getValueFontSize = (
   return getFontSize(configured, approvedDefaultMm, scale);
 };
 
+const displayOptionalValue = (value?: string) => {
+  const normalizedValue = value?.trim();
+  return !normalizedValue || normalizedValue === '-' ? 'NÃO INFORMADO' : normalizedValue;
+};
+
 const StudentPreviewCard: React.FC<StudentPreviewCardProps> = ({
   student,
   globalSchoolName,
@@ -383,7 +388,7 @@ const StudentPreviewCard: React.FC<StudentPreviewCardProps> = ({
         className="student-badge-field student-badge-field--alergia"
         readOnly
         tabIndex={-1}
-        value={student.allergy || 'NÃO INFORMADO'}
+        value={displayOptionalValue(student.allergy)}
         aria-label="Alergia"
         style={{
           ...fieldBase,
@@ -397,7 +402,7 @@ const StudentPreviewCard: React.FC<StudentPreviewCardProps> = ({
         className="student-badge-field student-badge-field--sangue"
         readOnly
         tabIndex={-1}
-        value={student.blood_type || 'NÃO INFORMADO'}
+        value={displayOptionalValue(student.blood_type)}
         aria-label="Tipo sanguíneo"
         style={{
           ...fieldBase,
