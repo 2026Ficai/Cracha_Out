@@ -11,30 +11,13 @@ const FacebookIcon = () => (
 );
 
 const AppFooter = () => (
-  <footer className="no-print mt-auto bg-[#06366b] text-white">
-    <div className="mx-auto flex w-full max-w-[1600px] flex-col justify-between gap-8 px-7 py-7 sm:px-10 md:flex-row md:items-start">
-      <div className="text-sm leading-relaxed text-white/95">
-        <p className="font-extrabold">Informações da Secretaria Municipal de Educação | PMI</p>
-        <p className="mt-2">Rua João Rosa Gonzales, 1242 - Engenho, Itaguaí, Rio de Janeiro - Brasil</p>
-        <p>CEP: 23.820-380</p>
-        <hr className="my-2 border-white/30" />
-        <p>Telefone: (21) 3782-9003 | RAMAL DO CPD: 2905</p>
-        <p>Horário de Funcionamento: 8h às 17h</p>
-        <p>E-mail: cpdinfra@edu.itaguai.rj.gov.br</p>
-      </div>
-
-      <div className="flex flex-col items-start text-left md:items-end md:text-right">
-        <img
-          src="https://novoportal.itaguai.rj.gov.br/++resource++gov.cidades/logo-cidades.jpeg"
-          alt="Cidades Gov.br"
-          className="mb-4 h-10 w-auto bg-white object-contain"
-        />
-        <p className="font-extrabold">Redes Sociais</p>
-        <hr className="my-2 w-24 border-white/30" />
-        <div className="flex items-center gap-3">
-          <a href="https://www.instagram.com/prefeituradeitaguai/" target="_blank" rel="noreferrer" aria-label="Instagram da Prefeitura de Itaguaí" className="text-white transition-opacity hover:opacity-75"><InstagramIcon /></a>
-          <a href="https://www.facebook.com/prefeituradeitaguai" target="_blank" rel="noreferrer" aria-label="Facebook da Prefeitura de Itaguaí" className="text-white transition-opacity hover:opacity-75"><FacebookIcon /></a>
-        </div>
+  <footer className="no-print mt-auto shrink-0 border-t border-blue-100 bg-white/95 text-slate-500">
+    <div className="mx-auto flex min-h-10 w-full max-w-[1600px] flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-2 text-[11px] sm:px-8">
+      <p className="font-medium">Secretaria Municipal de Educação | PMI <span className="mx-1 text-slate-300">•</span> (21) 3782-9003 <span className="mx-1 text-slate-300">•</span> cpdinfra@edu.itaguai.rj.gov.br</p>
+      <div className="flex items-center gap-3 text-[#06366b]">
+        <span className="font-bold text-slate-500">Itaguaí, RJ</span>
+        <a href="https://www.instagram.com/prefeituradeitaguai/" target="_blank" rel="noreferrer" aria-label="Instagram da Prefeitura de Itaguaí" className="transition-opacity hover:opacity-60"><InstagramIcon /></a>
+        <a href="https://www.facebook.com/prefeituradeitaguai" target="_blank" rel="noreferrer" aria-label="Facebook da Prefeitura de Itaguaí" className="transition-opacity hover:opacity-60"><FacebookIcon /></a>
       </div>
     </div>
   </footer>
