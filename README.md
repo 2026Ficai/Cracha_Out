@@ -30,3 +30,18 @@ If you are developing a production application, we recommend enabling type-aware
 ```
 
 See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+
+## Deploy no Netlify
+
+No Netlify, importe este repositório e configure:
+
+- Branch de publicação: `Dev_Cracha`
+- Build command: `npm run build`
+- Publish directory: `dist`
+
+Em **Site configuration → Environment variables**, cadastre as variáveis já usadas no ambiente local:
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+
+O arquivo `public/_redirects` mantém as rotas do React funcionando quando abertas diretamente no Netlify.
