@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
+import AppFooter from './AppFooter';
 import { useAuth } from '../../contexts/AuthContext';
 import { LogOut, User, Menu } from 'lucide-react';
 
@@ -47,6 +48,7 @@ const AppLayout = () => {
         
         <div className="flex-1 overflow-auto relative flex flex-col">
           <Outlet />
+          <AppFooter />
         </div>
       </div>
     </div>
