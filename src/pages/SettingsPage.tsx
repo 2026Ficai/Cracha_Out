@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { School, BookOpen, Users, Shield } from 'lucide-react';
+import { School, BookOpen, Users, Shield, FileText } from 'lucide-react';
 import SchoolsPage from './SchoolsPage';
 import ClassesPage from './ClassesPage';
 import UsersPage from './UsersPage';
 import PermissionsPage from './PermissionsPage';
+import SystemLogsPage from './SystemLogsPage';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('escolas');
@@ -13,6 +14,7 @@ export default function SettingsPage() {
     { id: 'turmas', label: 'Turmas', icon: <BookOpen className="w-5 h-5" /> },
     { id: 'usuarios', label: 'Usuários', icon: <Users className="w-5 h-5" /> },
     { id: 'permissoes', label: 'Permissões', icon: <Shield className="w-5 h-5" /> },
+    { id: 'logs', label: 'Logs do Sistema', icon: <FileText className="w-5 h-5" /> },
   ];
 
   return (
@@ -46,6 +48,7 @@ export default function SettingsPage() {
         {activeTab === 'turmas' && <ClassesPage isTab={true} />}
         {activeTab === 'usuarios' && <UsersPage isTab={true} />}
         {activeTab === 'permissoes' && <PermissionsPage isTab={true} />}
+        {activeTab === 'logs' && <SystemLogsPage isTab={true} />}
       </div>
     </div>
   );
