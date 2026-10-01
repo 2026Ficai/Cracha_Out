@@ -295,15 +295,17 @@ export default function Dashboard() {
                     <Award className="w-5 h-5 text-amber-500" />
                     Engajamento das Escolas
                   </h3>
-                  <span className="text-xs font-semibold text-slate-400">Top Cadastro</span>
+                  <span className="text-xs font-semibold text-slate-400">Todas as escolas</span>
                 </div>
 
                 <p className="text-xs text-slate-500 mb-4">
                   Escolas que lideram o número de alunos inseridos no sistema.
                 </p>
 
-                <div className="divide-y divide-slate-100 overflow-y-auto max-h-[220px]">
-                  {topSchools.slice(0, 5).map((sc, index) => (
+                <div className="divide-y divide-slate-100 overflow-y-auto max-h-[360px] pr-1">
+                  {topSchools.length === 0 ? (
+                    <div className="py-6 text-center text-sm text-slate-400">Nenhuma escola cadastrada.</div>
+                  ) : topSchools.map((sc, index) => (
                     <div key={sc.id} className="py-2.5 flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2.5 min-w-0">
                         <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${index === 0 ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'}`}>
@@ -334,4 +336,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
