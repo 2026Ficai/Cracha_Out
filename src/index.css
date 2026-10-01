@@ -1,0 +1,465 @@
+@import "tailwindcss";
+
+:root {
+  --navy-900: #001B48;
+  --blue-800: #02457A;
+  --cyan-600: #018ABE;
+  --sky-300: #97CADB;
+  --sky-100: #D6E8EE;
+
+  --gradient-primary: linear-gradient(135deg, #001B48, #02457A);
+  --gradient-action: linear-gradient(135deg, #02457A, #018ABE);
+  --gradient-soft: linear-gradient(135deg, #97CADB, #D6E8EE);
+}
+
+@theme {
+  --color-navy-900: var(--navy-900);
+  --color-blue-800: var(--blue-800);
+  --color-cyan-600: var(--cyan-600);
+  --color-sky-300: var(--sky-300);
+  --color-sky-100: var(--sky-100);
+
+  /* Compatibilidade com as cores antigas do sistema */
+  --color-expo-900: var(--navy-900);
+  --color-expo-800: var(--blue-800);
+  --color-expo-500: var(--cyan-600);
+  --color-expo-300: var(--sky-300);
+  --color-expo-100: var(--sky-100);
+
+  --color-brand-blue-50: var(--sky-100);
+  --color-brand-blue-100: var(--sky-300);
+  --color-brand-blue-500: var(--cyan-600);
+  --color-brand-blue-600: var(--cyan-600);
+  --color-brand-blue-700: var(--blue-800);
+  --color-navy-950: #000c20;
+
+  --animate-fade-in-up: fade-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+}
+
+@layer base {
+  body {
+    background-color: var(--color-sky-100);
+    color: var(--color-slate-800);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Custom scrollbar para a tabela */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9; 
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1; 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8; 
+}
+
+/* Regras estritas de Impressão (A4 Retrato - 8 ou 6 por folha) */
+@media print {
+  @page {
+    size: A4 portrait !important;
+    margin: 0 !important;
+  }
+
+  /* Un-flex/un-clip only the application shell.
+     IMPORTANT: never target #root * here. That old rule also changed the
+     badge image/fields to height:auto and was one of the causes of misalignment. */
+  html, body, #root,
+  #root > div,
+  #root > div > div,
+  #root > div > div > div {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  html, body, #root, #root > div, #root > div > div {
+    width: 210mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    display: block !important;
+    position: static !important;
+  }
+  
+  .no-print, .print\:hidden, header, nav, sidebar, aside {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #actualPrintContainer, #print-area {
+    display: block !important;
+    position: relative !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 210mm !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+    visibility: visible !important;
+  }
+
+  .print-page {
+    width: 210mm !important;
+    height: 297mm !important;
+    padding: 6mm 6mm !important;
+    box-sizing: border-box !important;
+    page-break-after: always !important;
+    page-break-inside: avoid !important;
+    break-after: page !important;
+    display: grid !important;
+    justify-content: center !important;
+    align-content: start !important;
+    background: #ffffff !important;
+  }
+
+  .print-page:last-child {
+    page-break-after: auto !important;
+    break-after: auto !important;
+  }
+
+  .print-page.layout-8, .print-page:not(.layout-6) {
+    grid-template-columns: 98mm 98mm !important;
+    grid-template-rows: 65.5mm 65.5mm 65.5mm 65.5mm !important;
+    column-gap: 4mm !important;
+    row-gap: 3mm !important;
+  }
+
+  .print-page.layout-6 {
+    grid-template-columns: 98mm 98mm !important;
+    grid-template-rows: 88mm 88mm 88mm !important;
+    column-gap: 4mm !important;
+    row-gap: 3mm !important;
+  }
+
+  .badge-print-wrapper, .badge-preview-container {
+    position: relative !important;
+    width: 98mm !important;
+    min-width: 98mm !important;
+    max-width: 98mm !important;
+    box-sizing: border-box !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    overflow: hidden !important;
+  }
+
+  .layout-8 .badge-print-wrapper, .layout-8 .badge-preview-container, .print-page:not(.layout-6) .badge-print-wrapper {
+    height: 65.5mm !important;
+    min-height: 65.5mm !important;
+    max-height: 65.5mm !important;
+  }
+
+  .layout-6 .badge-print-wrapper, .layout-6 .badge-preview-container {
+    height: 88mm !important;
+    min-height: 88mm !important;
+    max-height: 88mm !important;
+  }
+
+  /* Garantir que o card interno dentro da célula nunca perca position: relative no PDF */
+  .badge-print-wrapper > div,
+  .badge-preview-container > div {
+    position: relative !important;
+    transform: none !important;
+    margin: 0 !important;
+    width: 98mm !important;
+    min-width: 98mm !important;
+    max-width: 98mm !important;
+    box-sizing: border-box !important;
+  }
+
+  .layout-8 .badge-print-wrapper > div,
+  .print-page:not(.layout-6) .badge-print-wrapper > div {
+    height: 66mm !important;
+    min-height: 66mm !important;
+    max-height: 66mm !important;
+  }
+
+  .layout-6 .badge-print-wrapper > div {
+    height: 88mm !important;
+    min-height: 88mm !important;
+    max-height: 88mm !important;
+  }
+
+  /* Student badges now keep their own explicit aspect-ratio dimensions.
+     No ID-scoped height override is needed here. */
+
+  /* Student badge print geometry — copied from the approved standalone HTML.
+     These selectors intentionally outrank the legacy 98mm server-card rules above. */
+  .print-page.student-badge-print-page.layout-8 {
+    padding: 6mm 0 !important;
+    grid-template-columns: repeat(2, 86mm) !important;
+    grid-template-rows: repeat(4, 64.6mm) !important;
+    column-gap: 5mm !important;
+    row-gap: 4mm !important;
+    justify-content: center !important;
+    align-content: center !important;
+  }
+
+  .print-page.student-badge-print-page.layout-6 {
+    padding: 0 !important;
+    grid-template-columns: repeat(2, 95mm) !important;
+    grid-template-rows: repeat(3, 71.42mm) !important;
+    column-gap: 0 !important;
+    row-gap: 0 !important;
+    justify-content: space-evenly !important;
+    align-content: space-evenly !important;
+  }
+
+  .student-badge-print-page.layout-8 .student-badge-print-wrapper,
+  .student-badge-print-page.layout-8 .student-badge-print-wrapper > .student-badge-card {
+    width: 86mm !important;
+    min-width: 86mm !important;
+    max-width: 86mm !important;
+    height: 64.6mm !important;
+    min-height: 64.6mm !important;
+    max-height: 64.6mm !important;
+  }
+
+  .student-badge-print-page.layout-6 .student-badge-print-wrapper,
+  .student-badge-print-page.layout-6 .student-badge-print-wrapper > .student-badge-card {
+    width: 95mm !important;
+    min-width: 95mm !important;
+    max-width: 95mm !important;
+    height: 71.42mm !important;
+    min-height: 71.42mm !important;
+    max-height: 71.42mm !important;
+  }
+
+  .student-badge-print-wrapper,
+  .student-badge-print-wrapper > .student-badge-card {
+    position: relative !important;
+    overflow: hidden !important;
+    transform: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .student-badge-card > .student-badge-bg {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: fill !important;
+    display: block !important;
+  }
+
+  .student-badge-card > .student-badge-field {
+    position: absolute !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 1 !important;
+    box-sizing: border-box !important;
+  }
+
+  #print-area .badge-print-wrapper,
+  #print-area .badge-preview-container,
+  #actualPrintContainer .badge-print-wrapper,
+  #actualPrintContainer .badge-preview-container {
+    overflow: hidden !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DIALOG MODAL — Identidade Visual EXPO ITAGUAÍ 2026
+   ═══════════════════════════════════════════════════════════════ */
+
+@keyframes dialog-backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes dialog-panel-in {
+  from { opacity: 0; transform: translateY(-16px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)     scale(1);    }
+}
+
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 27, 72, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: dialog-backdrop-in 0.2s ease forwards;
+}
+
+.dialog-panel {
+  width: 100%;
+  max-width: 26rem;
+  background: #ffffff;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(0, 27, 72, 0.08),
+    0 4px 6px -1px rgba(0, 27, 72, 0.06),
+    0 20px 50px -8px rgba(0, 27, 72, 0.22);
+  animation: dialog-panel-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1.125rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dialog-header--info    { background: linear-gradient(135deg, #001B48, #02457A); }
+.dialog-header--confirm { background: linear-gradient(135deg, #001B48, #02457A); }
+.dialog-header--success { background: linear-gradient(135deg, #014d33, #027a52); }
+.dialog-header--error   { background: linear-gradient(135deg, #7a0202, #b91c1c); }
+.dialog-header--warning { background: linear-gradient(135deg, #78350f, #b45309); }
+
+.dialog-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+.dialog-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.dialog-icon svg { width: 1.125rem; height: 1.125rem; }
+.dialog-icon--info    { background: rgba(255,255,255,0.15); color: #97CADB; }
+.dialog-icon--confirm { background: rgba(255,255,255,0.15); color: #97CADB; }
+.dialog-icon--success { background: rgba(255,255,255,0.15); color: #6ee7b7; }
+.dialog-icon--error   { background: rgba(255,255,255,0.15); color: #fca5a5; }
+.dialog-icon--warning { background: rgba(255,255,255,0.15); color: #fcd34d; }
+
+.dialog-body {
+  padding: 1.5rem;
+  background: #f8fafc;
+}
+
+.dialog-message {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: #1e293b;
+  margin: 0;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 1rem 1.5rem;
+  background: #f1f5f9;
+  border-top: 1px solid #e2e8f0;
+}
+
+.dialog-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1.375rem;
+  border-radius: 0.625rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1.5px solid transparent;
+  outline: none;
+  letter-spacing: 0.01em;
+}
+.dialog-btn:focus-visible { outline: 2px solid #018ABE; outline-offset: 2px; }
+
+.dialog-btn--cancel {
+  background: #ffffff;
+  color: #475569;
+  border-color: #cbd5e1;
+}
+.dialog-btn--cancel:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #1e293b;
+}
+
+.dialog-btn--info,
+.dialog-btn--confirm {
+  background: linear-gradient(135deg, #02457A, #018ABE);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(1, 138, 190, 0.30);
+}
+.dialog-btn--info:hover,
+.dialog-btn--confirm:hover {
+  background: linear-gradient(135deg, #001B48, #02457A);
+  box-shadow: 0 6px 16px rgba(1, 138, 190, 0.40);
+  transform: translateY(-1px);
+}
+
+.dialog-btn--success {
+  background: linear-gradient(135deg, #014d33, #027a52);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(2, 122, 82, 0.30);
+}
+.dialog-btn--success:hover {
+  background: linear-gradient(135deg, #013d28, #016040);
+  transform: translateY(-1px);
+}
+
+.dialog-btn--error {
+  background: linear-gradient(135deg, #7a0202, #b91c1c);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(185, 28, 28, 0.30);
+}
+.dialog-btn--error:hover {
+  background: linear-gradient(135deg, #600202, #991b1b);
+  transform: translateY(-1px);
+}
+
+.dialog-btn--warning {
+  background: linear-gradient(135deg, #78350f, #b45309);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(180, 83, 9, 0.30);
+}
+.dialog-btn--warning:hover {
+  background: linear-gradient(135deg, #5c260a, #92400e);
+  transform: translateY(-1px);
+}
