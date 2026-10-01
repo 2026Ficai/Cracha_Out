@@ -383,7 +383,7 @@ const StudentPreviewCard: React.FC<StudentPreviewCardProps> = ({
         className="student-badge-field student-badge-field--alergia"
         readOnly
         tabIndex={-1}
-        value={student.allergy || 'NÃO'}
+        value={student.allergy || 'NÃO INFORMADO'}
         aria-label="Alergia"
         style={{
           ...fieldBase,
@@ -397,7 +397,7 @@ const StudentPreviewCard: React.FC<StudentPreviewCardProps> = ({
         className="student-badge-field student-badge-field--sangue"
         readOnly
         tabIndex={-1}
-        value={student.blood_type || '-'}
+        value={student.blood_type || 'NÃO INFORMADO'}
         aria-label="Tipo sanguíneo"
         style={{
           ...fieldBase,
