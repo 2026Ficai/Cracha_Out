@@ -20,7 +20,7 @@ export default function SettingsPage() {
       <div className="bg-white border-b border-slate-200 px-8 pt-8 shrink-0">
         <div className="mb-6">
           <h1 className="text-2xl font-black text-expo-900 tracking-tight">Configurações do Sistema</h1>
-          <p className="text-slate-500 mt-1">Gerencie os cadastros base e os acessos | Semana do Dia das Crianças | SMEDU | PMI.</p>
+          <p className="text-slate-500 mt-1">Gerencie os cadastros base e os acessos | A Escola Vai ao Cinema | SMEDU | PMI.</p>
         </div>
         
         <div className="flex gap-8">

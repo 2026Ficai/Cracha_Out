@@ -18,7 +18,7 @@ const AppLayout = () => {
                 <img src="/logo-escola-vai-ao-cinema.png" alt="A Escola Vai ao Cinema" className="hidden sm:block w-[270px] h-[70px] object-contain object-left" />
                 <div className="hidden md:block h-8 w-px bg-blue-100"></div>
                 <div>
-                    <h1 className="text-navy-900 font-extrabold text-lg tracking-tight leading-tight">SEMANA DO DIA DAS CRIANÇAS 2026 | SMEDU | PMI</h1>
+                    <h1 className="text-navy-900 font-extrabold text-lg tracking-tight leading-tight">A ESCOLA VAI AO CINEMA 2026 | SMEDU | PMI</h1>
                     <p className="text-slate-500 text-xs">Gerador Automatizado de Crachás Escolares</p>
                 </div>
             </div>
