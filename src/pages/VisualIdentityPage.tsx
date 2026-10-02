@@ -113,6 +113,10 @@ export default function VisualIdentityPage({ isTab = false }: { isTab?: boolean 
         </div>
 
         <div className="mt-5 max-w-5xl">
+          <div className="mb-3 flex items-start gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
+            <Check className="mt-0.5 h-4 w-4 shrink-0 text-sky-600" />
+            <p><strong>Somente a arte é alterada.</strong> Nome, escola, turma, alergia, tipo sanguíneo e contatos continuam sendo preenchidos automaticamente pelo sistema e não são editados nesta tela.</p>
+          </div>
           {imageField('badge_background_url', 'Arte de fundo do crachá', 'Imagem-base do crachá. Mantenha a proporção horizontal do modelo para que os campos permaneçam alinhados.', DEFAULT_BADGE_BACKGROUND, 'h-auto min-h-56')}
         </div>
 

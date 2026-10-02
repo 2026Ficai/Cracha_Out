@@ -77,11 +77,11 @@ export default function ManualStudentsPage() {
   const [isLoadingDB, setIsLoadingDB] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [headerRibbonUrl, setHeaderRibbonUrl] = useState('/fita-cinema.png');
+  const [badgeBackgroundUrl, setBadgeBackgroundUrl] = useState<string | null>(null);
 
   const [badgeSettings, setBadgeSettings] = useState<Settings>({ 
     logo_prefeitura_url: null, 
     logo_expo_url: null,
-    badge_background_url: null,
     label_title_1: 'IDENTIFICAÇÃO',
     label_title_2: 'ALUNO',
     label_nome: 'NOME COMPLETO:',
@@ -136,7 +136,6 @@ export default function ManualStudentsPage() {
         setBadgeSettings({
           logo_prefeitura_url: data[0].logo_prefeitura_url,
           logo_expo_url: data[0].logo_expo_url,
-          badge_background_url: data[0].badge_background_url || null,
           label_title_1: data[0].label_title_1 ?? 'IDENTIFICAÇÃO',
           label_title_2: data[0].label_title_2 ?? 'ALUNO',
           label_nome: data[0].label_nome ?? 'NOME COMPLETO:',
@@ -187,8 +186,9 @@ export default function ManualStudentsPage() {
 
   useEffect(() => {
     const loadHeaderRibbon = async () => {
-      const { data, error } = await supabase.from('badge_settings').select('header_ribbon_url').limit(1);
+      const { data, error } = await supabase.from('badge_settings').select('header_ribbon_url, badge_background_url').limit(1);
       setHeaderRibbonUrl(!error && data?.[0]?.header_ribbon_url ? data[0].header_ribbon_url : '/fita-cinema.png');
+      setBadgeBackgroundUrl(!error ? data?.[0]?.badge_background_url || null : null);
     };
 
     loadHeaderRibbon();
@@ -882,6 +882,10 @@ export default function ManualStudentsPage() {
     chunkedStudents.push(printStudentsList.slice(i, i + layoutCount));
   }
 
+  // The badge artwork is deliberately kept apart from field-style settings.
+  // This prevents a visual settings save from replacing the chosen background.
+  const previewSettings: Settings = { ...badgeSettings, badge_background_url: badgeBackgroundUrl };
+
   return (
     <>
       <style>{`
@@ -1069,7 +1073,7 @@ export default function ManualStudentsPage() {
                     globalSchoolName={globalSchoolName}
                     directorName={currentSchoolDirector}
                     layoutMode={printLayout}
-                    settings={badgeSettings}
+                    settings={previewSettings}
                   />
                 </div>
               );
@@ -1497,7 +1501,7 @@ export default function ManualStudentsPage() {
                           globalSchoolName={globalSchoolName} 
                           directorName={currentSchoolDirector}
                           layoutMode={printLayout}
-                          settings={badgeSettings}
+                          settings={previewSettings}
                         />
                     </div>
                     <div className="absolute inset-0 bg-slate-900/15 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center backdrop-blur-[1px]">
@@ -1908,7 +1912,7 @@ export default function ManualStudentsPage() {
                 globalSchoolName={globalSchoolName} 
                 directorName={currentSchoolDirector}
                 layoutMode={printLayout}
-                settings={badgeSettings}
+                settings={previewSettings}
               />
             </div>
           </div>
