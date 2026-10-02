@@ -1,11 +1,31 @@
+import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import AppFooter from './AppFooter';
 import { useAuth } from '../../contexts/AuthContext';
 import { LogOut, User, Menu } from 'lucide-react';
+import { supabase } from '../../lib/supabaseClient';
+
+const DEFAULT_APP_LOGO = '/logo-escola-vai-ao-cinema.png';
 
 const AppLayout = () => {
   const { appUser, signOut } = useAuth();
+  const [appLogoUrl, setAppLogoUrl] = useState(DEFAULT_APP_LOGO);
+
+  useEffect(() => {
+    const loadBrandLogo = async () => {
+      const { data, error } = await supabase.from('badge_settings').select('app_logo_url').limit(1);
+      if (!error && data?.[0]?.app_logo_url) {
+        setAppLogoUrl(data[0].app_logo_url);
+      } else {
+        setAppLogoUrl(DEFAULT_APP_LOGO);
+      }
+    };
+
+    loadBrandLogo();
+    window.addEventListener('brand-assets-updated', loadBrandLogo);
+    return () => window.removeEventListener('brand-assets-updated', loadBrandLogo);
+  }, []);
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50 font-sans text-slate-800">
@@ -16,7 +36,7 @@ const AppLayout = () => {
                 <button className="p-2 text-slate-400 hover:text-navy-900 transition-colors lg:hidden">
                     <Menu className="w-6 h-6" />
                 </button>
-                <img src="/logo-escola-vai-ao-cinema.png" alt="A Escola Vai ao Cinema" className="hidden sm:block w-[270px] h-[70px] object-contain object-left" />
+                <img src={appLogoUrl} alt="A Escola Vai ao Cinema" className="hidden sm:block w-[270px] h-[70px] object-contain object-left" />
                 <div className="hidden md:block h-8 w-px bg-blue-100"></div>
                 <div>
                     <h1 className="text-navy-900 font-extrabold text-lg tracking-tight leading-tight">A ESCOLA VAI AO CINEMA 2026 | SMEDU | PMI</h1>

@@ -1,0 +1,121 @@
+import { useEffect, useState } from 'react';
+import type { ChangeEvent } from 'react';
+import { Check, ImagePlus, Link2, LoaderCircle, RotateCcw, Save, Upload } from 'lucide-react';
+import { supabase } from '../lib/supabaseClient';
+
+const DEFAULT_LOGO = '/logo-escola-vai-ao-cinema.png';
+const DEFAULT_RIBBON = '/fita-cinema.png';
+
+interface BrandSettings {
+  id?: string;
+  app_logo_url: string | null;
+  header_ribbon_url: string | null;
+}
+
+const initialSettings: BrandSettings = { app_logo_url: null, header_ribbon_url: null };
+
+export default function VisualIdentityPage({ isTab = false }: { isTab?: boolean }) {
+  const [settings, setSettings] = useState<BrandSettings>(initialSettings);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState('');
+  const [schemaUnavailable, setSchemaUnavailable] = useState(false);
+
+  const loadSettings = async () => {
+    setLoading(true);
+    const { data, error } = await supabase.from('badge_settings').select('id, app_logo_url, header_ribbon_url').limit(1);
+    if (error) {
+      console.error('Erro ao carregar identidade visual:', error);
+      setSchemaUnavailable(true);
+    } else if (data?.[0]) {
+      setSettings(data[0] as BrandSettings);
+      setSchemaUnavailable(false);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => { loadSettings(); }, []);
+
+  const updateImage = (field: keyof Pick<BrandSettings, 'app_logo_url' | 'header_ribbon_url'>, event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setMessage('Selecione um arquivo de imagem válido.');
+      return;
+    }
+    if (file.size > 2_000_000) {
+      setMessage('Use imagens com até 2 MB para manter o sistema rápido.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => setSettings((current) => ({ ...current, [field]: String(reader.result) }));
+    reader.readAsDataURL(file);
+  };
+
+  const save = async () => {
+    setSaving(true);
+    setMessage('');
+    const payload = { app_logo_url: settings.app_logo_url, header_ribbon_url: settings.header_ribbon_url };
+    const result = settings.id
+      ? await supabase.from('badge_settings').update(payload).eq('id', settings.id)
+      : await supabase.from('badge_settings').insert(payload).select('id').single();
+
+    if (result.error) {
+      console.error('Erro ao salvar identidade visual:', result.error);
+      setMessage('Não foi possível salvar. Execute o script de atualização no Supabase e tente novamente.');
+    } else {
+      if (!settings.id && 'data' in result && result.data) setSettings((current) => ({ ...current, id: result.data.id }));
+      window.dispatchEvent(new Event('brand-assets-updated'));
+      setMessage('Identidade visual atualizada com sucesso.');
+      setSchemaUnavailable(false);
+    }
+    setSaving(false);
+  };
+
+  const imageField = (field: 'app_logo_url' | 'header_ribbon_url', title: string, description: string, defaultImage: string, className: string) => (
+    <div className="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
+      <div className="mb-4">
+        <h3 className="text-base font-black text-[#073780]">{title}</h3>
+        <p className="mt-1 text-xs leading-relaxed text-slate-500">{description}</p>
+      </div>
+      <div className={`mb-4 flex h-36 items-center justify-center overflow-hidden rounded-xl border border-dashed border-blue-200 bg-gradient-to-br from-sky-50 to-white p-3 ${className}`}>
+        <img src={settings[field] || defaultImage} alt={`Prévia: ${title}`} className="h-full w-full object-contain" />
+      </div>
+      <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
+        <label className="flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#073780] px-3 py-2.5 text-xs font-extrabold text-white transition hover:bg-[#05295e]">
+          <Upload className="h-4 w-4" /> Enviar imagem
+          <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={(event) => updateImage(field, event)} />
+        </label>
+        <button type="button" onClick={() => setSettings((current) => ({ ...current, [field]: null }))} className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 px-3 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-50"><RotateCcw className="h-4 w-4" /> Padrão</button>
+      </div>
+      <label className="mt-3 flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 focus-within:border-blue-400 focus-within:bg-white">
+        <Link2 className="h-4 w-4 shrink-0 text-slate-400" />
+        <input value={settings[field] || ''} onChange={(event) => setSettings((current) => ({ ...current, [field]: event.target.value || null }))} placeholder="Ou cole a URL da imagem" className="w-full bg-transparent text-xs text-slate-700 outline-none" />
+      </label>
+    </div>
+  );
+
+  return (
+    <div className={`${isTab ? 'p-4' : 'p-8'} h-full overflow-auto bg-slate-50`}>
+      <div className="mb-6 flex items-start gap-3">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-blue-700 to-cyan-500 text-white shadow-lg shadow-blue-600/25"><ImagePlus className="h-5 w-5" /></div>
+        <div><h2 className="text-xl font-black text-slate-800">Identidade Visual</h2><p className="text-sm text-slate-500">Personalize as imagens exibidas no cabeçalho do sistema.</p></div>
+      </div>
+
+      {schemaUnavailable && <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">Para ativar a personalização, execute o script <code className="rounded bg-white px-1.5 py-0.5 font-semibold">add_brand_assets.sql</code> no Supabase.</div>}
+
+      {loading ? <div className="flex items-center gap-2 p-8 text-sm text-slate-500"><LoaderCircle className="h-5 w-5 animate-spin" /> Carregando configurações visuais...</div> : <>
+        <div className="grid max-w-5xl grid-cols-1 gap-5 lg:grid-cols-2">
+          {imageField('app_logo_url', 'Logotipo principal', 'Imagem exibida no canto superior esquerdo. Prefira PNG transparente e formato horizontal.', DEFAULT_LOGO, '')}
+          {imageField('header_ribbon_url', 'Faixa decorativa', 'Imagem cinematográfica exibida à direita no topo da tela de identificação dos alunos.', DEFAULT_RIBBON, '')}
+        </div>
+
+        <div className="mt-5 flex max-w-5xl flex-wrap items-center justify-between gap-3 rounded-2xl border border-blue-100 bg-blue-50/70 p-4">
+          <p className="text-xs leading-relaxed text-blue-800">As imagens padrão continuam disponíveis. Para melhor desempenho, use arquivos JPG, PNG ou WEBP com até 2 MB.</p>
+          <button type="button" onClick={save} disabled={saving} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 to-cyan-600 px-5 py-2.5 text-sm font-extrabold text-white shadow-md transition hover:from-blue-800 hover:to-cyan-700 disabled:opacity-50">{saving ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}{saving ? 'Salvando...' : 'Salvar alterações'}</button>
+        </div>
+        {message && <div className={`mt-3 flex max-w-5xl items-center gap-2 text-sm font-medium ${message.includes('sucesso') ? 'text-emerald-700' : 'text-red-600'}`}><Check className="h-4 w-4" />{message}</div>}
+      </>}
+    </div>
+  );
+}

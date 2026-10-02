@@ -1,13 +1,17 @@
 import { useState } from 'react';
-import { School, BookOpen, Users, Shield, FileText } from 'lucide-react';
+import { School, BookOpen, Users, Shield, FileText, Image } from 'lucide-react';
 import SchoolsPage from './SchoolsPage';
 import ClassesPage from './ClassesPage';
 import UsersPage from './UsersPage';
 import PermissionsPage from './PermissionsPage';
 import SystemLogsPage from './SystemLogsPage';
+import VisualIdentityPage from './VisualIdentityPage';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('escolas');
+  const { appUser } = useAuth();
+  const isAdmin = appUser?.role === 'administrador';
 
   const tabs = [
     { id: 'escolas', label: 'Escolas', icon: <School className="w-5 h-5" /> },
@@ -15,6 +19,7 @@ export default function SettingsPage() {
     { id: 'usuarios', label: 'Usuários', icon: <Users className="w-5 h-5" /> },
     { id: 'permissoes', label: 'Permissões', icon: <Shield className="w-5 h-5" /> },
     { id: 'logs', label: 'Logs do Sistema', icon: <FileText className="w-5 h-5" /> },
+    ...(isAdmin ? [{ id: 'identidade', label: 'Identidade Visual', icon: <Image className="w-5 h-5" /> }] : []),
   ];
 
   return (
@@ -49,6 +54,7 @@ export default function SettingsPage() {
         {activeTab === 'usuarios' && <UsersPage isTab={true} />}
         {activeTab === 'permissoes' && <PermissionsPage isTab={true} />}
         {activeTab === 'logs' && <SystemLogsPage isTab={true} />}
+        {isAdmin && activeTab === 'identidade' && <VisualIdentityPage isTab={true} />}
       </div>
     </div>
   );

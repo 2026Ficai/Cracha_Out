@@ -76,6 +76,7 @@ export default function ManualStudentsPage() {
   const [isTourOpen, setIsTourOpen] = useState(false);
   const [isLoadingDB, setIsLoadingDB] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [headerRibbonUrl, setHeaderRibbonUrl] = useState('/fita-cinema.png');
 
   const [badgeSettings, setBadgeSettings] = useState<Settings>({ 
     logo_prefeitura_url: null, 
@@ -180,6 +181,17 @@ export default function ManualStudentsPage() {
       }
     };
     loadSettings();
+  }, []);
+
+  useEffect(() => {
+    const loadHeaderRibbon = async () => {
+      const { data, error } = await supabase.from('badge_settings').select('header_ribbon_url').limit(1);
+      setHeaderRibbonUrl(!error && data?.[0]?.header_ribbon_url ? data[0].header_ribbon_url : '/fita-cinema.png');
+    };
+
+    loadHeaderRibbon();
+    window.addEventListener('brand-assets-updated', loadHeaderRibbon);
+    return () => window.removeEventListener('brand-assets-updated', loadHeaderRibbon);
   }, []);
 
   const formatNames = (format: 'upper' | 'lower' | 'title') => {
@@ -1068,7 +1080,7 @@ export default function ManualStudentsPage() {
       <div className="flex-1 min-h-0 overflow-auto p-3 md:px-5 md:py-3 relative">
 
       <img
-        src="/fita-cinema.png"
+        src={headerRibbonUrl}
         alt=""
         aria-hidden="true"
         className="pointer-events-none absolute left-0 -top-1 w-[360px] max-w-none opacity-90 sm:left-auto sm:-right-8 sm:top-0 sm:w-[36rem] sm:max-w-[52%]"
