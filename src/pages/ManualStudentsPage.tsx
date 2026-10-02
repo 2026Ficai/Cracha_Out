@@ -78,6 +78,9 @@ export default function ManualStudentsPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [headerRibbonUrl, setHeaderRibbonUrl] = useState('/fita-cinema.png');
   const [badgeBackgroundUrl, setBadgeBackgroundUrl] = useState<string | null>(null);
+  const [badgeCrestUrl, setBadgeCrestUrl] = useState<string | null>(null);
+  const [badgeTitleArtUrl, setBadgeTitleArtUrl] = useState<string | null>(null);
+  const [badgeCharactersUrl, setBadgeCharactersUrl] = useState<string | null>(null);
 
   const [badgeSettings, setBadgeSettings] = useState<Settings>({ 
     logo_prefeitura_url: null, 
@@ -186,9 +189,12 @@ export default function ManualStudentsPage() {
 
   useEffect(() => {
     const loadHeaderRibbon = async () => {
-      const { data, error } = await supabase.from('badge_settings').select('header_ribbon_url, badge_background_url').limit(1);
+      const { data, error } = await supabase.from('badge_settings').select('header_ribbon_url, badge_background_url, badge_crest_url, badge_title_art_url, badge_characters_url').limit(1);
       setHeaderRibbonUrl(!error && data?.[0]?.header_ribbon_url ? data[0].header_ribbon_url : '/fita-cinema.png');
       setBadgeBackgroundUrl(!error ? data?.[0]?.badge_background_url || null : null);
+      setBadgeCrestUrl(!error ? data?.[0]?.badge_crest_url || null : null);
+      setBadgeTitleArtUrl(!error ? data?.[0]?.badge_title_art_url || null : null);
+      setBadgeCharactersUrl(!error ? data?.[0]?.badge_characters_url || null : null);
     };
 
     loadHeaderRibbon();
@@ -884,7 +890,13 @@ export default function ManualStudentsPage() {
 
   // The badge artwork is deliberately kept apart from field-style settings.
   // This prevents a visual settings save from replacing the chosen background.
-  const previewSettings: Settings = { ...badgeSettings, badge_background_url: badgeBackgroundUrl };
+  const previewSettings: Settings = {
+    ...badgeSettings,
+    badge_background_url: badgeBackgroundUrl,
+    badge_crest_url: badgeCrestUrl,
+    badge_title_art_url: badgeTitleArtUrl,
+    badge_characters_url: badgeCharactersUrl,
+  };
 
   return (
     <>

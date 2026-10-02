@@ -4,6 +4,9 @@ export interface Settings {
   logo_prefeitura_url: string | null;
   logo_expo_url: string | null;
   badge_background_url?: string | null;
+  badge_crest_url?: string | null;
+  badge_title_art_url?: string | null;
+  badge_characters_url?: string | null;
   label_title_1?: string;
   label_title_2?: string;
   label_nome?: string;
@@ -259,6 +262,17 @@ const StudentPreviewCard: React.FC<StudentPreviewCardProps> = ({
         }}
       />
 
+      {/* Optional artwork layers. They only replace their visual area; student fields remain dynamic. */}
+      {settings?.badge_crest_url && (
+        <img src={settings.badge_crest_url} alt="Brasão do crachá" className="pointer-events-none absolute object-contain" style={{ left: '4.8%', top: '4.5%', width: '13.5%', height: '18%', zIndex: 10 }} />
+      )}
+      {settings?.badge_title_art_url && (
+        <img src={settings.badge_title_art_url} alt="Título do crachá" className="pointer-events-none absolute object-contain" style={{ left: '17%', top: '2.5%', width: '55%', height: '20%', zIndex: 10 }} />
+      )}
+      {settings?.badge_characters_url && (
+        <img src={settings.badge_characters_url} alt="Personagens do crachá" className="pointer-events-none absolute object-contain object-bottom-right" style={{ right: '0', top: '27%', width: '47%', height: '62%', zIndex: 10 }} />
+      )}
+
       {hasCustomTitle1 && (
         <div style={{ ...labelBase, top: '3.8%', left: '25%', width: '50%', height: '7%' }} className="justify-center">
           <span
@@ -281,7 +295,7 @@ const StudentPreviewCard: React.FC<StudentPreviewCardProps> = ({
         </div>
       )}
 
-      {settings?.logo_prefeitura_url && (
+      {settings?.logo_prefeitura_url && !settings.badge_crest_url && (
         <div style={{ top: '4%', left: '4%', width: '20%', height: '18%', position: 'absolute', zIndex: 10 }} className="flex items-center justify-center bg-white rounded-lg p-1">
           <img src={settings.logo_prefeitura_url} alt="Logo Prefeitura" className="w-full h-full object-contain" />
         </div>

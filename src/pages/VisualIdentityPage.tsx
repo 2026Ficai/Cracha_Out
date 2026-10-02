@@ -6,20 +6,29 @@ import { supabase } from '../lib/supabaseClient';
 const DEFAULT_LOGO = '/logo-escola-vai-ao-cinema.png';
 const DEFAULT_RIBBON = '/fita-cinema.png';
 const DEFAULT_BADGE_BACKGROUND = '/cracha-cinema.png?v=1';
+const DEFAULT_BADGE_CREST = '/brasao_itaguai.png';
+const DEFAULT_BADGE_TITLE = '/logo-escola-vai-ao-cinema.png';
+const DEFAULT_BADGE_CHARACTERS = '/cracha-cinema.png?v=1';
 
 interface BrandSettings {
   id?: string;
   app_logo_url: string | null;
   header_ribbon_url: string | null;
   badge_background_url: string | null;
+  badge_crest_url: string | null;
+  badge_title_art_url: string | null;
+  badge_characters_url: string | null;
 }
 
-type ImageField = 'app_logo_url' | 'header_ribbon_url' | 'badge_background_url';
+type ImageField = 'app_logo_url' | 'header_ribbon_url' | 'badge_background_url' | 'badge_crest_url' | 'badge_title_art_url' | 'badge_characters_url';
 
 const initialSettings: BrandSettings = {
   app_logo_url: null,
   header_ribbon_url: null,
   badge_background_url: null,
+  badge_crest_url: null,
+  badge_title_art_url: null,
+  badge_characters_url: null,
 };
 
 export default function VisualIdentityPage({ isTab = false }: { isTab?: boolean }) {
@@ -33,7 +42,7 @@ export default function VisualIdentityPage({ isTab = false }: { isTab?: boolean 
     setLoading(true);
     const { data, error } = await supabase
       .from('badge_settings')
-      .select('id, app_logo_url, header_ribbon_url, badge_background_url')
+      .select('id, app_logo_url, header_ribbon_url, badge_background_url, badge_crest_url, badge_title_art_url, badge_characters_url')
       .limit(1);
 
     if (error) {
@@ -58,6 +67,9 @@ export default function VisualIdentityPage({ isTab = false }: { isTab?: boolean 
       app_logo_url: settingsToSave.app_logo_url,
       header_ribbon_url: settingsToSave.header_ribbon_url,
       badge_background_url: settingsToSave.badge_background_url,
+      badge_crest_url: settingsToSave.badge_crest_url,
+      badge_title_art_url: settingsToSave.badge_title_art_url,
+      badge_characters_url: settingsToSave.badge_characters_url,
     };
 
     const result = settingsToSave.id
@@ -159,6 +171,18 @@ export default function VisualIdentityPage({ isTab = false }: { isTab?: boolean 
           </div>
           {imageField('badge_background_url', 'Arte de fundo do crachá', 'Imagem-base do crachá. O envio é salvo automaticamente e não modifica os campos dos alunos.', DEFAULT_BADGE_BACKGROUND, 'h-auto min-h-56')}
         </div>
+
+        <section className="mt-5 max-w-6xl rounded-2xl border border-blue-100 bg-white/70 p-5">
+          <div className="mb-4">
+            <h3 className="text-base font-black text-[#073780]">Elementos do crachá</h3>
+            <p className="mt-1 text-xs text-slate-500">Troque somente a parte desejada. As imagens devem preferencialmente ter fundo transparente para cobrir apenas sua área.</p>
+          </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {imageField('badge_crest_url', 'Brasão', 'Exibido no canto superior esquerdo do crachá.', DEFAULT_BADGE_CREST)}
+            {imageField('badge_title_art_url', 'Título do tema', 'Exibido no topo do crachá.', DEFAULT_BADGE_TITLE)}
+            {imageField('badge_characters_url', 'Personagens', 'Exibidos no lado direito do crachá.', DEFAULT_BADGE_CHARACTERS)}
+          </div>
+        </section>
 
         <div className="mt-5 flex max-w-5xl flex-wrap items-center justify-between gap-3 rounded-2xl border border-blue-100 bg-blue-50/70 p-4">
           <p className="text-xs leading-relaxed text-blue-800">As imagens padrão continuam disponíveis. Para melhor desempenho, use arquivos JPG, PNG ou WEBP com até 2 MB.</p>
