@@ -1064,7 +1064,8 @@ export default function ManualStudentsPage() {
         ))}
       </div>
 
-      <div className="flex-1 overflow-auto p-3 md:px-5 md:py-3 flex flex-col bg-gradient-to-b from-[#f5fbff] via-white to-slate-50 relative pb-36 print:hidden">
+      <div className="flex-1 min-h-0 flex flex-col bg-gradient-to-b from-[#f5fbff] via-white to-slate-50 relative print:hidden">
+      <div className="flex-1 min-h-0 overflow-auto p-3 md:px-5 md:py-3 relative">
 
       <img
         src="/fita-cinema.png"
@@ -1095,8 +1096,8 @@ export default function ManualStudentsPage() {
       </div>
 
       {/* Header Controls & Summary */}
-      <div className="mb-4 bg-white/95 backdrop-blur-sm p-3 md:p-4 rounded-2xl border border-blue-100 shadow-[0_5px_18px_rgba(20,76,146,0.10)] flex flex-col xl:flex-row items-center gap-3 justify-between relative z-10">
-          <div className="flex items-center gap-3 w-full xl:w-auto flex-wrap sm:flex-nowrap">
+      <div className="mb-4 bg-white/95 backdrop-blur-sm p-3 md:p-4 rounded-2xl border border-blue-100 shadow-[0_5px_18px_rgba(20,76,146,0.10)] flex flex-col 2xl:flex-row items-start 2xl:items-center gap-3 justify-between relative z-10">
+          <div className="flex items-center gap-3 w-full 2xl:w-auto flex-wrap">
               {isAdmin ? (
                   <>
                       <span className="text-sm font-bold text-slate-800 whitespace-nowrap">Escola global</span>
@@ -1129,10 +1130,10 @@ export default function ManualStudentsPage() {
               </div>
           </div>
           
-          <div className="hidden xl:block w-px h-6 bg-slate-200 mx-2"></div>
+          <div className="hidden 2xl:block w-px h-6 bg-slate-200 mx-2"></div>
           
           {/* Import Summary */}
-          <div className="flex items-center gap-2.5 w-full xl:w-auto overflow-x-auto pb-1 xl:pb-0 hide-scrollbar">
+          <div className="flex flex-wrap items-center gap-2.5 w-full 2xl:w-auto pb-1 2xl:pb-0">
               <div className="text-xs font-bold text-slate-400 uppercase tracking-wide mr-1 shrink-0 hidden md:block">Resumo:</div>
               
               <div className="flex items-center gap-2 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200 shrink-0">
@@ -1485,9 +1486,11 @@ export default function ManualStudentsPage() {
 
       </div>
 
-      {/* Floating Footer Premium */}
-      <div className="fixed bottom-3 lg:bottom-4 left-3 sm:left-4 md:left-24 lg:left-24 right-3 sm:right-4 lg:right-6 z-40">
-        <div className="bg-gradient-to-r from-slate-100 via-sky-50 to-blue-100 backdrop-blur-xl border border-sky-200/70 shadow-[0_-2px_0_rgba(186,230,253,0.5),0_8px_40px_rgba(0,40,100,0.18),inset_0_1px_0_rgba(255,255,255,0.9)] rounded-2xl p-2 flex items-center justify-between gap-2 px-2 sm:px-4 ring-1 ring-sky-200/40">
+      </div>
+
+      {/* Barra de ações: fora da área rolável para nunca cobrir o conteúdo. */}
+      <div className="shrink-0 border-t border-sky-200 bg-white/95 px-3 py-2 shadow-[0_-4px_18px_rgba(20,76,146,0.10)]">
+        <div className="bg-gradient-to-r from-slate-50 via-sky-50 to-blue-50 border border-sky-200/70 rounded-xl p-2 flex items-center justify-between gap-2 px-2 sm:px-4 ring-1 ring-sky-200/40">
 
           <div className="hidden 2xl:flex items-center gap-2 mr-auto text-xs text-slate-500 font-medium bg-white/60 px-3 py-1.5 rounded-full border border-white/80 shadow-sm">
               <Info className="w-3.5 h-3.5 text-blue-500" />
@@ -1500,7 +1503,7 @@ export default function ManualStudentsPage() {
                 className="shrink-0 px-3 py-2 text-red-600 hover:text-red-700 font-semibold text-sm bg-white/80 hover:bg-white border border-red-200 hover:border-red-400 rounded-xl transition-all flex items-center gap-2 shadow-sm"
                 title="Limpar Lista"
               >
-                  <X className="w-4 h-4" /> <span className="hidden xl:inline">Limpar Lista</span>
+                  <X className="w-4 h-4" /> <span className="hidden 2xl:inline">Limpar Lista</span>
               </button>
               
               <div className="h-6 w-[1px] bg-slate-300/50 mx-1 hidden sm:block"></div>
@@ -1510,7 +1513,7 @@ export default function ManualStudentsPage() {
                  className="tour-draft-save shrink-0 px-3 py-2 text-blue-800 font-bold text-sm bg-white hover:bg-blue-50 border border-blue-200/70 rounded-xl transition-all flex items-center gap-2 shadow-[0_2px_8px_rgba(30,64,175,0.10)] hover:shadow-[0_4px_12px_rgba(30,64,175,0.18)] hover:border-blue-300"
                 title="Salvar rascunho"
               >
-                  <Save className="w-4 h-4 text-blue-800" /> <span className="hidden xl:inline">Salvar rascunho</span>
+                  <Save className="w-4 h-4 text-blue-800" /> <span className="hidden 2xl:inline">Salvar rascunho</span>
               </button>
               
               <button 
@@ -1519,7 +1522,7 @@ export default function ManualStudentsPage() {
                  className="tour-load-db shrink-0 px-3 py-2 text-blue-800 font-bold text-sm bg-white hover:bg-blue-50 border border-blue-200/70 rounded-xl transition-all flex items-center gap-2 shadow-[0_2px_8px_rgba(30,64,175,0.10)] hover:shadow-[0_4px_12px_rgba(30,64,175,0.18)] hover:border-blue-300 disabled:opacity-50"
                 title="Carregar do Banco"
               >
-                  <Download className="w-4 h-4 text-blue-800" /> <span className="hidden xl:inline">{isLoadingDB ? 'Carregando...' : 'Carregar do Banco'}</span>
+                  <Download className="w-4 h-4 text-blue-800" /> <span className="hidden 2xl:inline">{isLoadingDB ? 'Carregando...' : 'Carregar do Banco'}</span>
               </button>
               
               {isAdmin && globalSchoolId && (
@@ -1528,7 +1531,7 @@ export default function ManualStudentsPage() {
                   className="shrink-0 px-3 py-2 text-red-700 font-bold text-sm bg-red-50 hover:bg-red-100 border border-red-200/80 rounded-xl transition-all flex items-center gap-2 shadow-sm"
                   title={`Apagar todos os alunos salvos no banco para ${globalSchoolName}`}
                 >
-                    <Trash2 className="w-4 h-4 text-red-600" /> <span className="hidden xl:inline">Limpar Banco da Escola</span>
+                    <Trash2 className="w-4 h-4 text-red-600" /> <span className="hidden 2xl:inline">Limpar Banco da Escola</span>
                 </button>
               )}
               
@@ -1538,7 +1541,7 @@ export default function ManualStudentsPage() {
                    className="shrink-0 px-3 py-2 text-blue-800 font-bold text-sm bg-white hover:bg-blue-50 border border-blue-200/70 rounded-xl transition-all flex items-center gap-2 shadow-[0_2px_8px_rgba(30,64,175,0.10)] hover:shadow-[0_4px_12px_rgba(30,64,175,0.18)] hover:border-blue-300"
                   title="Visual do Crachá"
                 >
-                    <Palette className="w-4 h-4 text-amber-600" /> <span className="hidden xl:inline">Visual</span>
+                    <Palette className="w-4 h-4 text-amber-600" /> <span className="hidden 2xl:inline">Visual</span>
                 </button>
               )}
           </div>
