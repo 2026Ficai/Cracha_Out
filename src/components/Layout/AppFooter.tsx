@@ -11,11 +11,11 @@ const FacebookIcon = () => (
 );
 
 const AppFooter = () => (
-  <footer className="no-print mt-auto shrink-0 border-t border-blue-100 bg-white/95 text-slate-500">
+  <footer className="no-print mt-auto shrink-0 border-t border-blue-800 bg-[#064f99] text-white">
     <div className="mx-auto flex min-h-10 w-full max-w-[1600px] flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-2 text-[11px] sm:px-8">
-      <p className="font-medium">Secretaria Municipal de Educação | PMI <span className="mx-1 text-slate-300">•</span> (21) 3782-9003 <span className="mx-1 text-slate-300">•</span> cpdinfra@edu.itaguai.rj.gov.br</p>
-      <div className="flex items-center gap-3 text-[#06366b]">
-        <span className="font-bold text-slate-500">Itaguaí, RJ</span>
+      <p className="font-medium text-white/95">Secretaria Municipal de Educação | PMI <span className="mx-1 text-white/50">•</span> (21) 3782-9003 <span className="mx-1 text-white/50">•</span> cpdinfra@edu.itaguai.rj.gov.br</p>
+      <div className="flex items-center gap-3 text-white">
+        <span className="font-bold text-white/90">Itaguaí, RJ</span>
         <a href="https://www.instagram.com/prefeituradeitaguai/" target="_blank" rel="noreferrer" aria-label="Instagram da Prefeitura de Itaguaí" className="transition-opacity hover:opacity-60"><InstagramIcon /></a>
         <a href="https://www.facebook.com/prefeituradeitaguai" target="_blank" rel="noreferrer" aria-label="Facebook da Prefeitura de Itaguaí" className="transition-opacity hover:opacity-60"><FacebookIcon /></a>
       </div>
