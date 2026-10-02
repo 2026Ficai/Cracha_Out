@@ -3,6 +3,7 @@ import React from 'react';
 export interface Settings {
   logo_prefeitura_url: string | null;
   logo_expo_url: string | null;
+  badge_background_url?: string | null;
   label_title_1?: string;
   label_title_2?: string;
   label_nome?: string;
@@ -240,7 +241,7 @@ const StudentPreviewCard: React.FC<StudentPreviewCardProps> = ({
     >
       {/* Exact clean artwork extracted from the only approved/aligned standalone HTML. */}
       <img
-        src="/cracha-cinema.png?v=1"
+        src={settings?.badge_background_url || '/cracha-cinema.png?v=1'}
         alt="Base do crachá de aluno"
         className="student-badge-bg pointer-events-none"
         style={{

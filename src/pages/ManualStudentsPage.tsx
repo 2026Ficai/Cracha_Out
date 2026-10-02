@@ -81,6 +81,7 @@ export default function ManualStudentsPage() {
   const [badgeSettings, setBadgeSettings] = useState<Settings>({ 
     logo_prefeitura_url: null, 
     logo_expo_url: null,
+    badge_background_url: null,
     label_title_1: 'IDENTIFICAÇÃO',
     label_title_2: 'ALUNO',
     label_nome: 'NOME COMPLETO:',
@@ -135,6 +136,7 @@ export default function ManualStudentsPage() {
         setBadgeSettings({
           logo_prefeitura_url: data[0].logo_prefeitura_url,
           logo_expo_url: data[0].logo_expo_url,
+          badge_background_url: data[0].badge_background_url || null,
           label_title_1: data[0].label_title_1 ?? 'IDENTIFICAÇÃO',
           label_title_2: data[0].label_title_2 ?? 'ALUNO',
           label_nome: data[0].label_nome ?? 'NOME COMPLETO:',

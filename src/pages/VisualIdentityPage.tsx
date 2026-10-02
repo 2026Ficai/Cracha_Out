@@ -5,14 +5,16 @@ import { supabase } from '../lib/supabaseClient';
 
 const DEFAULT_LOGO = '/logo-escola-vai-ao-cinema.png';
 const DEFAULT_RIBBON = '/fita-cinema.png';
+const DEFAULT_BADGE_BACKGROUND = '/cracha-cinema.png?v=1';
 
 interface BrandSettings {
   id?: string;
   app_logo_url: string | null;
   header_ribbon_url: string | null;
+  badge_background_url: string | null;
 }
 
-const initialSettings: BrandSettings = { app_logo_url: null, header_ribbon_url: null };
+const initialSettings: BrandSettings = { app_logo_url: null, header_ribbon_url: null, badge_background_url: null };
 
 export default function VisualIdentityPage({ isTab = false }: { isTab?: boolean }) {
   const [settings, setSettings] = useState<BrandSettings>(initialSettings);
@@ -23,7 +25,7 @@ export default function VisualIdentityPage({ isTab = false }: { isTab?: boolean 
 
   const loadSettings = async () => {
     setLoading(true);
-    const { data, error } = await supabase.from('badge_settings').select('id, app_logo_url, header_ribbon_url').limit(1);
+    const { data, error } = await supabase.from('badge_settings').select('id, app_logo_url, header_ribbon_url, badge_background_url').limit(1);
     if (error) {
       console.error('Erro ao carregar identidade visual:', error);
       setSchemaUnavailable(true);
@@ -36,7 +38,7 @@ export default function VisualIdentityPage({ isTab = false }: { isTab?: boolean 
 
   useEffect(() => { loadSettings(); }, []);
 
-  const updateImage = (field: keyof Pick<BrandSettings, 'app_logo_url' | 'header_ribbon_url'>, event: ChangeEvent<HTMLInputElement>) => {
+  const updateImage = (field: keyof Pick<BrandSettings, 'app_logo_url' | 'header_ribbon_url' | 'badge_background_url'>, event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) {
@@ -55,7 +57,7 @@ export default function VisualIdentityPage({ isTab = false }: { isTab?: boolean 
   const save = async () => {
     setSaving(true);
     setMessage('');
-    const payload = { app_logo_url: settings.app_logo_url, header_ribbon_url: settings.header_ribbon_url };
+    const payload = { app_logo_url: settings.app_logo_url, header_ribbon_url: settings.header_ribbon_url, badge_background_url: settings.badge_background_url };
     const result = settings.id
       ? await supabase.from('badge_settings').update(payload).eq('id', settings.id)
       : await supabase.from('badge_settings').insert(payload).select('id').single();
@@ -72,7 +74,7 @@ export default function VisualIdentityPage({ isTab = false }: { isTab?: boolean 
     setSaving(false);
   };
 
-  const imageField = (field: 'app_logo_url' | 'header_ribbon_url', title: string, description: string, defaultImage: string, className: string) => (
+  const imageField = (field: 'app_logo_url' | 'header_ribbon_url' | 'badge_background_url', title: string, description: string, defaultImage: string, className: string) => (
     <div className="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
       <div className="mb-4">
         <h3 className="text-base font-black text-[#073780]">{title}</h3>
@@ -108,6 +110,10 @@ export default function VisualIdentityPage({ isTab = false }: { isTab?: boolean 
         <div className="grid max-w-5xl grid-cols-1 gap-5 lg:grid-cols-2">
           {imageField('app_logo_url', 'Logotipo principal', 'Imagem exibida no canto superior esquerdo. Prefira PNG transparente e formato horizontal.', DEFAULT_LOGO, '')}
           {imageField('header_ribbon_url', 'Faixa decorativa', 'Imagem cinematográfica exibida à direita no topo da tela de identificação dos alunos.', DEFAULT_RIBBON, '')}
+        </div>
+
+        <div className="mt-5 max-w-5xl">
+          {imageField('badge_background_url', 'Arte de fundo do crachá', 'Imagem-base do crachá. Mantenha a proporção horizontal do modelo para que os campos permaneçam alinhados.', DEFAULT_BADGE_BACKGROUND, 'h-auto min-h-56')}
         </div>
 
         <div className="mt-5 flex max-w-5xl flex-wrap items-center justify-between gap-3 rounded-2xl border border-blue-100 bg-blue-50/70 p-4">
