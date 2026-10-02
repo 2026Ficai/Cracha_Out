@@ -127,8 +127,8 @@ export default function VisualIdentityPage({ isTab = false }: { isTab?: boolean 
   };
 
   const imageField = (field: ImageField, title: string, description: string, defaultImage: string, className = '') => (
-    <div className="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
-      <div className="mb-4">
+    <div className="rounded-2xl border border-blue-100 bg-white p-3 shadow-sm md:p-4">
+      <div className="mb-3">
         <h3 className="text-base font-black text-[#073780]">{title}</h3>
         <p className="mt-1 text-xs leading-relaxed text-slate-500">{description}</p>
       </div>
@@ -150,8 +150,8 @@ export default function VisualIdentityPage({ isTab = false }: { isTab?: boolean 
   );
 
   return (
-    <div className={`${isTab ? 'p-4' : 'p-8'} h-full overflow-auto bg-slate-50`}>
-      <div className="mb-6 flex items-start gap-3">
+    <div className={`${isTab ? 'p-3 md:p-5' : 'p-5 md:p-8'} h-full overflow-auto bg-slate-50`}>
+      <div className="mb-4 flex items-start gap-3 md:mb-5">
         <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-blue-700 to-cyan-500 text-white shadow-lg shadow-blue-600/25"><ImagePlus className="h-5 w-5" /></div>
         <div><h2 className="text-xl font-black text-slate-800">Identidade Visual</h2><p className="text-sm text-slate-500">Personalize o cabeçalho e a arte exibida nos crachás.</p></div>
       </div>
@@ -172,8 +172,8 @@ export default function VisualIdentityPage({ isTab = false }: { isTab?: boolean 
           {imageField('badge_background_url', 'Arte de fundo do crachá', 'Imagem-base do crachá. O envio é salvo automaticamente e não modifica os campos dos alunos.', DEFAULT_BADGE_BACKGROUND, 'h-auto min-h-56')}
         </div>
 
-        <section className="mt-5 max-w-6xl rounded-2xl border border-blue-100 bg-white/70 p-5">
-          <div className="mb-4">
+        <section className="mt-4 max-w-6xl rounded-2xl border border-blue-100 bg-white/70 p-3 md:mt-5 md:p-4">
+          <div className="mb-3">
             <h3 className="text-base font-black text-[#073780]">Elementos do crachá</h3>
             <p className="mt-1 text-xs text-slate-500">Troque somente a parte desejada. As imagens devem preferencialmente ter fundo transparente para cobrir apenas sua área.</p>
           </div>

@@ -23,19 +23,19 @@ export default function SettingsPage() {
   ];
 
   return (
-    <div className="flex flex-col h-full bg-slate-50">
-      <div className="bg-white border-b border-slate-200 px-8 pt-8 shrink-0">
-        <div className="mb-6">
-          <h1 className="text-2xl font-black text-expo-900 tracking-tight">Configurações do Sistema</h1>
-          <p className="text-slate-500 mt-1">Gerencie os cadastros base e os acessos | A Escola Vai ao Cinema | SMEDU | PMI.</p>
+    <div className="flex h-full min-h-0 flex-col bg-slate-50">
+      <div className="shrink-0 border-b border-slate-200 bg-white px-4 pt-4 md:px-6 md:pt-5">
+        <div className="mb-3 md:mb-4">
+          <h1 className="text-xl font-black tracking-tight text-expo-900 md:text-2xl">Configurações do Sistema</h1>
+          <p className="mt-1 text-xs text-slate-500 md:text-sm">Gerencie os cadastros base e os acessos | A Escola Vai ao Cinema | SMEDU | PMI.</p>
         </div>
         
-        <div className="flex gap-8">
+        <div className="-mx-4 flex gap-1 overflow-x-auto px-4 md:-mx-6 md:gap-3 md:px-6" aria-label="Seções de configurações">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 pb-4 px-1 border-b-2 font-semibold transition-colors ${
+              className={`flex shrink-0 items-center gap-1.5 border-b-2 px-2 py-3 text-xs font-semibold transition-colors md:gap-2 md:text-sm ${
                 activeTab === tab.id
                   ? 'border-expo-500 text-expo-600'
                   : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
@@ -48,7 +48,7 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden">
+      <div className="min-h-0 flex-1 overflow-hidden">
         {activeTab === 'escolas' && <SchoolsPage isTab={true} />}
         {activeTab === 'turmas' && <ClassesPage isTab={true} />}
         {activeTab === 'usuarios' && <UsersPage isTab={true} />}
