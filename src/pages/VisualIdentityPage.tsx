@@ -68,9 +68,10 @@ export default function VisualIdentityPage({ isTab = false }: { isTab?: boolean 
     if (result.error || !rowWasUpdated) {
       console.error('Erro ao salvar identidade visual:', result.error);
       const columnMissing = result.error?.code === '42703' || result.error?.message?.includes('badge_background_url');
-      setMessage(columnMissing
-        ? 'Falta atualizar o banco de dados. Execute add_brand_assets.sql no Supabase e tente novamente.'
-        : 'Não foi possível salvar. Confirme seu acesso de administrador e tente novamente.');
+      const permissionDenied = result.error?.code === '42501' || !rowWasUpdated;
+      setMessage(columnMissing || permissionDenied
+        ? 'O Supabase ainda bloqueia esta gravação. Execute add_brand_assets.sql no Supabase e tente novamente.'
+        : 'Não foi possível salvar a imagem. Tente novamente.');
     } else {
       const savedId = result.data?.id;
       if (!settingsToSave.id && savedId) {
