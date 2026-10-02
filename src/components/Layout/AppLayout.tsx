@@ -31,16 +31,16 @@ const AppLayout = () => {
     <div className="flex h-screen overflow-hidden bg-slate-50 font-sans text-slate-800">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-        <header className="h-[72px] bg-white border-b border-blue-100 flex items-center justify-between px-3 md:px-5 shrink-0 z-10 no-print shadow-[0_2px_12px_rgba(17,74,143,0.06)]">
+        <header className="h-[54px] bg-white border-b border-blue-100 flex items-center justify-between px-3 md:px-4 shrink-0 z-10 no-print shadow-[0_2px_12px_rgba(17,74,143,0.06)]">
             <div className="flex min-w-0 items-center gap-2 md:gap-3">
                 <button className="p-2 text-slate-400 hover:text-navy-900 transition-colors lg:hidden">
                     <Menu className="w-6 h-6" />
                 </button>
-                <img src={appLogoUrl} alt="A Escola Vai ao Cinema" className="hidden sm:block h-[58px] w-[190px] object-contain object-left lg:w-[230px]" />
+                <img src={appLogoUrl} alt="A Escola Vai ao Cinema" className="hidden sm:block h-[48px] w-[180px] object-contain object-left lg:w-[195px]" />
                 <div className="hidden md:block h-8 w-px bg-blue-100"></div>
                 <div className="min-w-0">
-                    <h1 className="truncate text-base font-extrabold leading-tight tracking-tight text-navy-900 lg:text-lg">A ESCOLA VAI AO CINEMA 2026 | SMEDU | PMI</h1>
-                    <p className="truncate text-[11px] text-slate-500">Gerador Automatizado de Crachás Escolares</p>
+                    <h1 className="truncate text-sm font-extrabold leading-tight tracking-tight text-navy-900 lg:text-base">A ESCOLA VAI AO CINEMA 2026 | SMEDU | PMI</h1>
+                    <p className="truncate text-[9px] text-slate-500">Gerador Automatizado de Crachás Escolares</p>
                 </div>
             </div>
             {/* Right side actions */}

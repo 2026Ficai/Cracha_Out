@@ -1095,7 +1095,7 @@ export default function ManualStudentsPage() {
       </div>
 
       <div className="flex-1 min-h-0 flex flex-col bg-gradient-to-b from-[#f5fbff] via-white to-slate-50 relative print:hidden">
-      <div className="flex-1 min-h-0 overflow-auto p-3 md:px-5 md:py-3 relative">
+      <div className="flex-1 min-h-0 overflow-auto p-3 md:px-4 md:py-2 relative">
 
       <img
         src={headerRibbonUrl}
@@ -1112,7 +1112,7 @@ export default function ManualStudentsPage() {
                       Voltar para Gerador de Crachás
                   </Link>
               )}
-              <h2 className="text-2xl md:text-[32px] leading-tight font-black text-[#073780] tracking-tight flex items-center gap-2 drop-shadow-[0_1px_0_rgba(255,255,255,0.8)]">
+              <h2 className="text-2xl md:text-[28px] leading-tight font-black text-[#073780] tracking-tight flex items-center gap-2 drop-shadow-[0_1px_0_rgba(255,255,255,0.8)]">
                   Identificação dos alunos <span className="text-yellow-400">★</span>
                   <button onClick={() => setIsTourOpen(true)} className="bg-blue-50 text-blue-600 hover:bg-blue-100 p-1 rounded-full transition-colors flex items-center justify-center" title="Tour pelo Sistema">
                       <HelpCircle className="w-4 h-4" />
@@ -1126,8 +1126,8 @@ export default function ManualStudentsPage() {
       </div>
 
       {/* Header Controls & Summary */}
-      <div className="mb-4 bg-white/95 backdrop-blur-sm p-3 md:p-4 rounded-2xl border border-blue-100 shadow-[0_5px_18px_rgba(20,76,146,0.10)] flex flex-col 2xl:flex-row items-start 2xl:items-center gap-3 justify-between relative z-10">
-          <div className="flex items-center gap-3 w-full 2xl:w-auto flex-wrap">
+      <div className="mb-3 bg-white/95 backdrop-blur-sm p-3 rounded-2xl border border-blue-100 shadow-[0_5px_18px_rgba(20,76,146,0.10)] flex flex-col xl:flex-row items-start xl:items-center gap-3 justify-between relative z-10">
+          <div className="flex items-center gap-3 w-full xl:w-auto flex-wrap">
               {isAdmin ? (
                   <>
                       <span className="text-sm font-bold text-slate-800 whitespace-nowrap">Escola global</span>
@@ -1160,10 +1160,10 @@ export default function ManualStudentsPage() {
               </div>
           </div>
           
-          <div className="hidden 2xl:block w-px h-6 bg-slate-200 mx-2"></div>
+          <div className="hidden xl:block w-px h-6 bg-slate-200 mx-2"></div>
           
           {/* Import Summary */}
-          <div className="flex flex-wrap items-center gap-2.5 w-full 2xl:w-auto pb-1 2xl:pb-0">
+          <div className="flex flex-wrap items-center gap-2 w-full xl:w-auto pb-1 xl:pb-0">
               <div className="text-xs font-bold text-slate-400 uppercase tracking-wide mr-1 shrink-0 hidden md:block">Resumo:</div>
               
               <div className="flex items-center gap-2 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200 shrink-0">
@@ -1198,14 +1198,14 @@ export default function ManualStudentsPage() {
           </div>
       </div>
 
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-5 relative z-10">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 relative z-10">
         
         {/* Left Column - Forms */}
         <div className="col-span-1 lg:col-span-8 flex flex-col gap-4">
             
             {/* Main Insertion Card */}
-            <div className="bg-white/95 rounded-[20px] shadow-[0_8px_24px_rgba(14,70,140,0.09)] p-4 md:p-5 flex flex-col border border-blue-100">
-              <div className="flex items-center justify-between gap-3 mb-4">
+            <div className="bg-white/95 rounded-[20px] shadow-[0_8px_24px_rgba(14,70,140,0.09)] p-3 md:p-4 flex flex-col border border-blue-100">
+              <div className="flex items-center justify-between gap-3 mb-3">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-700 to-cyan-500 text-white flex items-center justify-center shadow-md"><UserSquare2 className="w-5 h-5" /></div>
                   <div><h3 className="font-black text-xl text-[#093784] leading-none">Adicionar alunos</h3><p className="text-sm text-[#5671a3] mt-1">Inclua os dados pelo Excel ou faça o cadastro manualmente.</p></div>
@@ -1538,7 +1538,7 @@ export default function ManualStudentsPage() {
       <div className="shrink-0 border-t border-sky-200 bg-white/95 px-3 py-2 shadow-[0_-4px_18px_rgba(20,76,146,0.10)]">
         <div className="bg-gradient-to-r from-slate-50 via-sky-50 to-blue-50 border border-sky-200/70 rounded-xl p-2 flex items-center justify-between gap-2 px-2 sm:px-4 ring-1 ring-sky-200/40">
 
-          <div className="hidden 2xl:flex items-center gap-2 mr-auto text-xs text-slate-500 font-medium bg-white/60 px-3 py-1.5 rounded-full border border-white/80 shadow-sm">
+          <div className="hidden xl:flex items-center gap-2 mr-auto text-xs text-slate-500 font-medium bg-white/60 px-3 py-1.5 rounded-full border border-white/80 shadow-sm">
               <Info className="w-3.5 h-3.5 text-blue-500" />
               Não se esqueça de salvar antes de sair
           </div>
@@ -1546,48 +1546,48 @@ export default function ManualStudentsPage() {
           <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
               <button 
                 onClick={handleCancel}
-                className="shrink-0 px-3 py-2 text-red-600 hover:text-red-700 font-semibold text-sm bg-white/80 hover:bg-white border border-red-200 hover:border-red-400 rounded-xl transition-all flex items-center gap-2 shadow-sm"
+                className="shrink-0 px-2.5 py-1.5 text-red-600 hover:text-red-700 font-semibold text-xs bg-white/80 hover:bg-white border border-red-200 hover:border-red-400 rounded-xl transition-all flex items-center gap-1.5 shadow-sm"
                 title="Limpar Lista"
               >
-                  <X className="w-4 h-4" /> <span className="hidden 2xl:inline">Limpar Lista</span>
+                  <X className="w-4 h-4" /> <span className="hidden xl:inline">Limpar Lista</span>
               </button>
               
               <div className="h-6 w-[1px] bg-slate-300/50 mx-1 hidden sm:block"></div>
 
               <button 
                 onClick={handleDraftSave}
-                 className="tour-draft-save shrink-0 px-3 py-2 text-blue-800 font-bold text-sm bg-white hover:bg-blue-50 border border-blue-200/70 rounded-xl transition-all flex items-center gap-2 shadow-[0_2px_8px_rgba(30,64,175,0.10)] hover:shadow-[0_4px_12px_rgba(30,64,175,0.18)] hover:border-blue-300"
+                 className="tour-draft-save shrink-0 px-2.5 py-1.5 text-blue-800 font-bold text-xs bg-white hover:bg-blue-50 border border-blue-200/70 rounded-xl transition-all flex items-center gap-1.5 shadow-[0_2px_8px_rgba(30,64,175,0.10)] hover:shadow-[0_4px_12px_rgba(30,64,175,0.18)] hover:border-blue-300"
                 title="Salvar rascunho"
               >
-                  <Save className="w-4 h-4 text-blue-800" /> <span className="hidden 2xl:inline">Salvar rascunho</span>
+                  <Save className="w-4 h-4 text-blue-800" /> <span className="hidden xl:inline">Salvar rascunho</span>
               </button>
               
               <button 
                 onClick={loadFromDatabase}
                 disabled={isLoadingDB}
-                 className="tour-load-db shrink-0 px-3 py-2 text-blue-800 font-bold text-sm bg-white hover:bg-blue-50 border border-blue-200/70 rounded-xl transition-all flex items-center gap-2 shadow-[0_2px_8px_rgba(30,64,175,0.10)] hover:shadow-[0_4px_12px_rgba(30,64,175,0.18)] hover:border-blue-300 disabled:opacity-50"
+                 className="tour-load-db shrink-0 px-2.5 py-1.5 text-blue-800 font-bold text-xs bg-white hover:bg-blue-50 border border-blue-200/70 rounded-xl transition-all flex items-center gap-1.5 shadow-[0_2px_8px_rgba(30,64,175,0.10)] hover:shadow-[0_4px_12px_rgba(30,64,175,0.18)] hover:border-blue-300 disabled:opacity-50"
                 title="Carregar do Banco"
               >
-                  <Download className="w-4 h-4 text-blue-800" /> <span className="hidden 2xl:inline">{isLoadingDB ? 'Carregando...' : 'Carregar do Banco'}</span>
+                  <Download className="w-4 h-4 text-blue-800" /> <span className="hidden xl:inline">{isLoadingDB ? 'Carregando...' : 'Carregar do Banco'}</span>
               </button>
               
               {isAdmin && globalSchoolId && (
                 <button 
                   onClick={handleDeleteSchoolDatabaseStudents}
-                  className="shrink-0 px-3 py-2 text-red-700 font-bold text-sm bg-red-50 hover:bg-red-100 border border-red-200/80 rounded-xl transition-all flex items-center gap-2 shadow-sm"
+                  className="shrink-0 px-2.5 py-1.5 text-red-700 font-bold text-xs bg-red-50 hover:bg-red-100 border border-red-200/80 rounded-xl transition-all flex items-center gap-1.5 shadow-sm"
                   title={`Apagar todos os alunos salvos no banco para ${globalSchoolName}`}
                 >
-                    <Trash2 className="w-4 h-4 text-red-600" /> <span className="hidden 2xl:inline">Limpar Banco da Escola</span>
+                    <Trash2 className="w-4 h-4 text-red-600" /> <span className="hidden xl:inline">Limpar Banco da Escola</span>
                 </button>
               )}
               
               {isAdmin && (
                 <button 
                   onClick={() => setIsSettingsModalOpen(true)}
-                   className="shrink-0 px-3 py-2 text-blue-800 font-bold text-sm bg-white hover:bg-blue-50 border border-blue-200/70 rounded-xl transition-all flex items-center gap-2 shadow-[0_2px_8px_rgba(30,64,175,0.10)] hover:shadow-[0_4px_12px_rgba(30,64,175,0.18)] hover:border-blue-300"
+                   className="shrink-0 px-2.5 py-1.5 text-blue-800 font-bold text-xs bg-white hover:bg-blue-50 border border-blue-200/70 rounded-xl transition-all flex items-center gap-1.5 shadow-[0_2px_8px_rgba(30,64,175,0.10)] hover:shadow-[0_4px_12px_rgba(30,64,175,0.18)] hover:border-blue-300"
                   title="Visual do Crachá"
                 >
-                    <Palette className="w-4 h-4 text-amber-600" /> <span className="hidden 2xl:inline">Visual</span>
+                    <Palette className="w-4 h-4 text-amber-600" /> <span className="hidden xl:inline">Visual</span>
                 </button>
               )}
           </div>
@@ -1597,7 +1597,7 @@ export default function ManualStudentsPage() {
                 <select 
                   value={printLayout}
                   onChange={e => setPrintLayout(e.target.value as '8' | '6')}
-                   className="tour-layout-select appearance-none pl-3 pr-8 py-2 bg-white border border-blue-200/70 hover:border-blue-400 rounded-xl text-sm text-blue-900 font-bold outline-none focus:ring-2 focus:ring-blue-500/30 transition-all cursor-pointer shadow-[0_2px_8px_rgba(30,64,175,0.10)]"
+                   className="tour-layout-select appearance-none pl-3 pr-8 py-1.5 bg-white border border-blue-200/70 hover:border-blue-400 rounded-xl text-xs text-blue-900 font-bold outline-none focus:ring-2 focus:ring-blue-500/30 transition-all cursor-pointer shadow-[0_2px_8px_rgba(30,64,175,0.10)]"
                 >
                   <option value="8">8 por folha</option>
                   <option value="6">6 por folha</option>
@@ -1609,7 +1609,7 @@ export default function ManualStudentsPage() {
               
               <button 
                 onClick={generatePDF}
-                 className="tour-print shrink-0 px-3 sm:px-4 py-2 bg-gradient-to-r from-blue-800 to-blue-900 text-white font-bold text-sm hover:from-blue-700 hover:to-blue-800 rounded-xl transition-all flex items-center gap-2 shadow-[0_4px_16px_rgba(30,58,138,0.35)] hover:shadow-[0_6px_20px_rgba(30,58,138,0.45)] ring-1 ring-blue-700/50"
+                 className="tour-print shrink-0 px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-blue-800 to-blue-900 text-white font-bold text-xs hover:from-blue-700 hover:to-blue-800 rounded-xl transition-all flex items-center gap-1.5 shadow-[0_4px_16px_rgba(30,58,138,0.35)] hover:shadow-[0_6px_20px_rgba(30,58,138,0.45)] ring-1 ring-blue-700/50"
               >
                   <Printer className="w-4 h-4 text-blue-200" /> <span className="hidden sm:inline">Imprimir PDF</span>
               </button>
@@ -1617,7 +1617,7 @@ export default function ManualStudentsPage() {
               <button 
                 onClick={handleSaveAndReturn}
                 disabled={isSaving}
-                className="tour-save-return shrink-0 px-3 sm:px-5 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold text-sm rounded-xl hover:from-cyan-500 hover:to-blue-500 transition-all flex items-center gap-2 shadow-[0_6px_16px_rgba(6,182,212,0.25)] hover:shadow-[0_8px_20px_rgba(6,182,212,0.35)] disabled:opacity-50"
+                className="tour-save-return shrink-0 px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold text-xs rounded-xl hover:from-cyan-500 hover:to-blue-500 transition-all flex items-center gap-1.5 shadow-[0_6px_16px_rgba(6,182,212,0.25)] hover:shadow-[0_8px_20px_rgba(6,182,212,0.35)] disabled:opacity-50"
               >
                   <Check className="w-4 h-4 text-cyan-100" /> <span className="hidden sm:inline">{isSaving ? 'Salvando...' : 'Salvar e voltar'}</span>
               </button>
