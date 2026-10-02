@@ -1280,24 +1280,40 @@ export default function ManualStudentsPage() {
                               
 
 
-                              {/* Atenção box */}
-                              <div className="mt-3 relative z-10 bg-[#F4F8FB] rounded-[16px] border border-[#E1EEF4] p-3 shadow-sm text-center">
-                                  <div className="flex items-center justify-center gap-2 mb-2">
-                                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#142850] to-[#0C7B93] text-white flex items-center justify-center shadow-sm shrink-0">
+                              {/* Modelo visual da planilha aceita */}
+                              <div className="mt-3 relative z-10 rounded-[18px] border border-[#d7e9f7] bg-white/80 p-3 shadow-sm">
+                                  <div className="mb-3 flex items-center justify-center gap-2 text-center">
+                                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#073780] to-[#00A8CC] text-white shadow-sm shrink-0">
                                           <AlertTriangle className="w-4 h-4" strokeWidth={2.5} />
                                       </div>
-                                      <div className="flex items-baseline justify-center gap-1.5 flex-wrap">
-                                        <span className="text-sm font-black text-[#142850]">ATENÇÃO!</span>
-                                        <span className="text-xs font-black text-[#142850] uppercase">COLUNAS ACEITAS NA PLANILHA:</span>
+                                      <div className="text-sm font-black tracking-tight text-[#073780]">
+                                        ATENÇÃO! <span className="text-xs uppercase">Colunas aceitas na planilha:</span>
                                       </div>
                                   </div>
-                                  <div className="flex flex-wrap justify-center gap-2">
-                                      <span className="px-3 py-1.5 bg-white border border-[#E1EEF4] rounded-full text-xs text-[#142850] font-bold shadow-sm flex items-center gap-1.5"><div className="bg-[#00A8CC]/10 p-0.5 rounded-full"><Check className="w-3 h-3 text-[#00A8CC]" strokeWidth={3} /></div> Nome do estudante</span>
-                                      <span className="px-3 py-1.5 bg-white border border-[#E1EEF4] rounded-full text-xs text-[#142850] font-bold shadow-sm flex items-center gap-1.5"><div className="bg-[#00A8CC]/10 p-0.5 rounded-full"><Check className="w-3 h-3 text-[#00A8CC]" strokeWidth={3} /></div> Turma</span>
-                                      <span className="px-3 py-1.5 bg-white border border-[#E1EEF4] rounded-full text-xs text-[#142850] font-bold shadow-sm flex items-center gap-1.5"><div className="bg-[#00A8CC]/10 p-0.5 rounded-full"><Check className="w-3 h-3 text-[#00A8CC]" strokeWidth={3} /></div> Alergia</span>
-                                      <span className="px-3 py-1.5 bg-white border border-[#E1EEF4] rounded-full text-xs text-[#142850] font-bold shadow-sm flex items-center gap-1.5"><div className="bg-[#00A8CC]/10 p-0.5 rounded-full"><Check className="w-3 h-3 text-[#00A8CC]" strokeWidth={3} /></div> Tipo Sang.</span>
-                                      <span className="px-3 py-1.5 bg-white border border-[#E1EEF4] rounded-full text-xs text-[#142850] font-bold shadow-sm flex items-center gap-1.5"><div className="bg-[#00A8CC]/10 p-0.5 rounded-full"><Check className="w-3 h-3 text-[#00A8CC]" strokeWidth={3} /></div> Contato Resp. 1 (diretor ou Adjunto)</span>
-                                      <span className="px-3 py-1.5 bg-white border border-[#E1EEF4] rounded-full text-xs text-[#142850] font-bold shadow-sm flex items-center gap-1.5"><div className="bg-[#00A8CC]/10 p-0.5 rounded-full"><Check className="w-3 h-3 text-[#00A8CC]" strokeWidth={3} /></div> Contato Resp. 2 (diretor ou Adjunto)</span>
+
+                                  <div className="overflow-x-auto rounded-xl border border-[#b9dcf6]">
+                                    <table className="min-w-[850px] w-full border-collapse text-center text-xs text-[#17366b]">
+                                      <thead className="bg-gradient-to-r from-[#eff8ff] to-[#e9f5ff]">
+                                        <tr>
+                                          <th className="w-[25%] border-r border-[#b9dcf6] px-3 py-3 font-extrabold"><span className="flex items-center justify-center gap-2"><span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#00A8CC] shadow-sm"><Check className="h-4 w-4" strokeWidth={3} /></span>Nome do estudante</span></th>
+                                          <th className="w-[12%] border-r border-[#b9dcf6] px-3 py-3 font-extrabold"><span className="flex items-center justify-center gap-2"><span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#00A8CC] shadow-sm"><Check className="h-4 w-4" strokeWidth={3} /></span>Turma</span></th>
+                                          <th className="w-[12%] border-r border-[#b9dcf6] px-3 py-3 font-extrabold"><span className="flex items-center justify-center gap-2"><span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#00A8CC] shadow-sm"><Check className="h-4 w-4" strokeWidth={3} /></span>Alergia</span></th>
+                                          <th className="w-[14%] border-r border-[#b9dcf6] px-3 py-3 font-extrabold"><span className="flex items-center justify-center gap-2"><span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#00A8CC] shadow-sm"><Check className="h-4 w-4" strokeWidth={3} /></span>Tipo Sang.</span></th>
+                                          <th className="w-[18%] border-r border-[#b9dcf6] px-3 py-3 font-extrabold"><span className="flex items-center justify-center gap-2"><span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#00A8CC] shadow-sm"><Check className="h-4 w-4" strokeWidth={3} /></span><span>Contato Resp. 1<br />(diretor ou Adjunto)</span></span></th>
+                                          <th className="w-[19%] px-3 py-3 font-extrabold"><span className="flex items-center justify-center gap-2"><span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#00A8CC] shadow-sm"><Check className="h-4 w-4" strokeWidth={3} /></span><span>Contato Resp. 2<br />(diretor ou Adjunto)</span></span></th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr className="bg-white text-sm font-medium">
+                                          <td className="border-r border-t border-[#d7e9f7] px-3 py-2.5">Nome completo do(a) aluno(a)</td>
+                                          <td className="border-r border-t border-[#d7e9f7] px-3 py-2.5">1º Ano A</td>
+                                          <td className="border-r border-t border-[#d7e9f7] px-3 py-2.5">Poeira</td>
+                                          <td className="border-r border-t border-[#d7e9f7] px-3 py-2.5">AB+</td>
+                                          <td className="border-r border-t border-[#d7e9f7] px-3 py-2.5">(21) ****-****</td>
+                                          <td className="border-t border-[#d7e9f7] px-3 py-2.5">(21) ****-****</td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
                                   </div>
                               </div>
                           </div>
