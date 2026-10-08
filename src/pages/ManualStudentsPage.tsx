@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { 
   ArrowLeft, Check, Save, Plus, Trash2, Printer, X, FileSpreadsheet, 
-  UserSquare2, ClipboardPaste, AlertTriangle, Info, Upload, Download, FileText, HelpCircle,
+  UserSquare2, ClipboardPaste, AlertTriangle, Info, Upload, Download, FileSignature, HelpCircle, Loader2,
   Type, Palette, Image, ZoomIn
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,6 +14,7 @@ import * as XLSX from 'xlsx';
 import { Joyride, STATUS } from 'react-joyride';
 import type { Step } from 'react-joyride';
 import { CustomTooltip } from '../components/Tour/CustomTooltip';
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
 interface School {
   id: string;
@@ -75,6 +76,7 @@ export default function ManualStudentsPage() {
   const [isProcessingFile, setIsProcessingFile] = useState(false);
   const [isTourOpen, setIsTourOpen] = useState(false);
   const [isLoadingDB, setIsLoadingDB] = useState(false);
+  const [isGeneratingAuthorizations, setIsGeneratingAuthorizations] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [headerRibbonUrl, setHeaderRibbonUrl] = useState('/fita-cinema.png');
   const [badgeBackgroundUrl, setBadgeBackgroundUrl] = useState<string | null>(null);
@@ -832,6 +834,93 @@ export default function ManualStudentsPage() {
     window.print();
   };
 
+  const generateAuthorizationsPDF = async () => {
+    if (!globalSchoolId) {
+      await showWarning('Selecione uma escola para gerar as autorizações.');
+      return;
+    }
+
+    setIsGeneratingAuthorizations(true);
+    try {
+      const pageSize = 1000;
+      const authorizationStudents: { full_name: string }[] = [];
+      let from = 0;
+
+      // Busca paginada para incluir todos os alunos, inclusive quando houver mais de 1.000 registros.
+      while (true) {
+        const { data, error } = await supabase
+          .from('students')
+          .select('full_name')
+          .eq('school_id', globalSchoolId)
+          .order('full_name', { ascending: true })
+          .range(from, from + pageSize - 1);
+
+        if (error) throw error;
+
+        const page = (data || []).filter(student => student.full_name?.trim());
+        authorizationStudents.push(...page);
+
+        if ((data || []).length < pageSize) break;
+        from += pageSize;
+      }
+
+      if (authorizationStudents.length === 0) {
+        await showAlert(`Não há alunos cadastrados para a escola "${globalSchoolName}".`, { title: 'Sem alunos cadastrados' });
+        return;
+      }
+
+      const templateResponse = await fetch('/formularios/autorizacao-projeto-escola-vai-ao-cinema.pdf');
+      if (!templateResponse.ok) {
+        throw new Error('O modelo original de autorização não foi encontrado.');
+      }
+
+      const templateBytes = await templateResponse.arrayBuffer();
+      const templateDocument = await PDFDocument.load(templateBytes);
+      const authorizationDocument = await PDFDocument.create();
+      const font = await authorizationDocument.embedFont(StandardFonts.Helvetica);
+      const black = rgb(0, 0, 0);
+
+      const drawFittedText = (page: ReturnType<typeof authorizationDocument.addPage>, value: string, x: number, y: number, maxWidth: number) => {
+        let fontSize = 10.5;
+        while (font.widthOfTextAtSize(value, fontSize) > maxWidth && fontSize > 7) {
+          fontSize -= 0.25;
+        }
+        page.drawText(value, { x, y, size: fontSize, font, color: black });
+      };
+
+      for (const student of authorizationStudents) {
+        const [templatePage] = await authorizationDocument.copyPages(templateDocument, [0]);
+        authorizationDocument.addPage(templatePage);
+
+        // Coordenadas do modelo original em pontos PDF (origem no canto inferior esquerdo).
+        // Mantemos os campos de responsável, identidade e CPF sem qualquer preenchimento.
+        const schoolName = globalSchoolName.trim().toUpperCase();
+        const studentName = student.full_name.trim().toUpperCase();
+        drawFittedText(templatePage, schoolName, 204, 713, 320);
+        drawFittedText(templatePage, studentName, 255, 585, 275);
+      }
+
+      const safeSchoolName = globalSchoolName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/(^-|-$)/g, '').toLowerCase();
+      const generatedPdf = await authorizationDocument.save();
+      const pdfBuffer = generatedPdf.buffer.slice(generatedPdf.byteOffset, generatedPdf.byteOffset + generatedPdf.byteLength) as ArrayBuffer;
+      const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
+      const downloadUrl = URL.createObjectURL(pdfBlob);
+      const downloadLink = document.createElement('a');
+      downloadLink.href = downloadUrl;
+      downloadLink.download = `autorizacoes-${safeSchoolName || 'escola'}.pdf`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      downloadLink.remove();
+      window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1_000);
+      await showSuccess(`${authorizationStudents.length} autorização(ões) foram geradas em um único PDF.`, 'Autorizações prontas');
+    } catch (err: any) {
+      console.error('Erro ao gerar autorizações:', err);
+      await showError(`Não foi possível gerar as autorizações: ${err?.message || String(err)}`);
+    } finally {
+      setIsGeneratingAuthorizations(false);
+    }
+  };
+
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(true);
@@ -1120,21 +1209,22 @@ export default function ManualStudentsPage() {
               </h2>
               <p className="text-[#48689f] text-sm mt-0.5 font-medium">Cadastre os alunos e prepare os crachás para a sessão de cinema.</p>
           </div>
-          <a
-            href="/formularios/autorizacao-projeto-escola-vai-ao-cinema.pdf"
-            download="Autorização - Projeto A Escola Vai ao Cinema.pdf"
-            className="group mt-1 flex w-full items-center gap-3 rounded-2xl border border-cyan-200 bg-gradient-to-r from-white via-cyan-50 to-blue-50 px-3.5 py-2.5 text-left shadow-sm transition-all hover:-translate-y-px hover:border-cyan-400 hover:shadow-md md:mt-0 md:w-auto md:min-w-[255px]"
-            aria-label="Baixar formulário de autorização do projeto A Escola Vai ao Cinema"
+          <button
+            type="button"
+            onClick={generateAuthorizationsPDF}
+            disabled={isGeneratingAuthorizations || !globalSchoolId}
+            className="group mt-1 flex w-full items-center gap-3 rounded-2xl border border-violet-200 bg-gradient-to-r from-white via-violet-50 to-indigo-50 px-3.5 py-2.5 text-left shadow-sm transition-all hover:-translate-y-px hover:border-violet-400 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 md:mt-0 md:w-auto md:min-w-[280px]"
+            title={globalSchoolId ? 'Gerar uma autorização preenchida para cada aluno cadastrado' : 'Selecione uma escola para gerar as autorizações'}
           >
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#073780] to-[#00A8CC] text-white shadow-sm">
-              <FileText className="h-4.5 w-4.5" />
+              {isGeneratingAuthorizations ? <Loader2 className="h-4.5 w-4.5 animate-spin" /> : <FileSignature className="h-4.5 w-4.5" />}
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-[11px] font-black uppercase tracking-wide text-[#073780]">Formulário de autorização</span>
-              <span className="block truncate text-[10px] font-medium text-[#5671a3]">Projeto A Escola Vai ao Cinema</span>
+              <span className="block text-[11px] font-black uppercase tracking-wide text-[#4c1d95]">{isGeneratingAuthorizations ? 'Gerando autorizações...' : 'Gerar autorizações preenchidas'}</span>
+              <span className="block truncate text-[10px] font-medium text-[#6d5ca5]">Uma página para cada aluno cadastrado</span>
             </span>
-            <Download className="h-4 w-4 shrink-0 text-cyan-700 transition-transform group-hover:translate-y-0.5" />
-          </a>
+            <FileSignature className="h-4 w-4 shrink-0 text-violet-700 transition-transform group-hover:translate-y-0.5" />
+          </button>
       </div>
 
       {/* Header Controls & Summary */}
@@ -1624,6 +1714,16 @@ export default function ManualStudentsPage() {
                  className="tour-print shrink-0 px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-blue-800 to-blue-900 text-white font-bold text-xs hover:from-blue-700 hover:to-blue-800 rounded-xl transition-all flex items-center gap-1.5 shadow-[0_4px_16px_rgba(30,58,138,0.35)] hover:shadow-[0_6px_20px_rgba(30,58,138,0.45)] ring-1 ring-blue-700/50"
               >
                   <Printer className="w-4 h-4 text-blue-200" /> <span className="hidden sm:inline">Imprimir PDF</span>
+              </button>
+
+              <button
+                onClick={generateAuthorizationsPDF}
+                disabled={isGeneratingAuthorizations || !globalSchoolId}
+                className="shrink-0 px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-violet-700 to-indigo-700 text-white font-bold text-xs hover:from-violet-600 hover:to-indigo-600 rounded-xl transition-all flex items-center gap-1.5 shadow-[0_4px_16px_rgba(91,33,182,0.28)] hover:shadow-[0_6px_20px_rgba(91,33,182,0.40)] disabled:cursor-not-allowed disabled:opacity-50"
+                title={globalSchoolId ? 'Gerar uma autorização preenchida para cada aluno cadastrado' : 'Selecione uma escola para gerar as autorizações'}
+              >
+                  {isGeneratingAuthorizations ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileSignature className="w-4 h-4 text-violet-100" />}
+                  <span className="hidden sm:inline">{isGeneratingAuthorizations ? 'Gerando...' : 'Gerar autorizações'}</span>
               </button>
               
               <button 

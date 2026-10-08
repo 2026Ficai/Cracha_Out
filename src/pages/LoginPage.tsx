@@ -69,8 +69,8 @@ export default function LoginPage() {
                 <FileText className="h-5 w-5" />
               </div>
               <div className="min-w-0 flex-1">
-                <h4 id="authorization-form-title" className="text-sm font-extrabold text-navy-900">Formulário de autorização</h4>
-                <p className="mt-0.5 text-xs leading-relaxed text-slate-500">Baixe o documento do projeto antes de acessar o sistema.</p>
+                <h4 id="authorization-form-title" className="text-sm font-extrabold text-navy-900">Modelo de autorização em branco</h4>
+                <p className="mt-0.5 text-xs leading-relaxed text-slate-500">Baixe o documento para preenchimento manual antes de acessar o sistema.</p>
               </div>
             </div>
             <a
@@ -79,7 +79,7 @@ export default function LoginPage() {
               className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-cyan-600 bg-white px-3 py-2.5 text-xs font-extrabold text-cyan-700 shadow-sm transition-all hover:-translate-y-px hover:bg-cyan-600 hover:text-white hover:shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
             >
               <Download className="h-4 w-4" />
-              Baixar formulário (PDF)
+              Baixar modelo em branco (PDF)
             </a>
           </section>
 
