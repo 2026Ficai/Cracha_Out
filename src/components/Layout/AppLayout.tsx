@@ -3,10 +3,11 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import AppFooter from './AppFooter';
 import { useAuth } from '../../contexts/AuthContext';
-import { LogOut, User, Menu } from 'lucide-react';
+import { Download, FileText, LogOut, User, Menu } from 'lucide-react';
 import { supabase } from '../../lib/supabaseClient';
 
 const DEFAULT_APP_LOGO = '/logo-escola-vai-ao-cinema.png';
+const AUTHORIZATION_FORM_URL = '/formularios/autorizacao-projeto-escola-vai-ao-cinema.pdf';
 
 const AppLayout = () => {
   const { appUser, signOut } = useAuth();
@@ -46,6 +47,19 @@ const AppLayout = () => {
             {/* Right side actions */}
             <div className="flex shrink-0 items-center gap-3 md:gap-5">
                 <div id="header-actions" className="hidden md:block"></div>
+                <a
+                  href={AUTHORIZATION_FORM_URL}
+                  download="Autorização - Projeto A Escola Vai ao Cinema.pdf"
+                  className="group flex items-center justify-center gap-2 rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-cyan-50 px-2.5 py-2 text-blue-800 shadow-sm transition-all hover:-translate-y-px hover:border-cyan-400 hover:from-blue-100 hover:to-cyan-100 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 sm:px-3"
+                  title="Baixar formulário de autorização"
+                  aria-label="Baixar formulário de autorização do projeto A Escola Vai ao Cinema"
+                >
+                  <span className="flex h-5 w-5 items-center justify-center rounded-md bg-white text-cyan-600 shadow-sm">
+                    <FileText className="h-3.5 w-3.5" />
+                  </span>
+                  <span className="hidden text-xs font-extrabold leading-none lg:block">Autorização</span>
+                  <Download className="hidden h-3.5 w-3.5 text-blue-600 transition-transform group-hover:translate-y-0.5 lg:block" />
+                </a>
                 <div className="h-8 w-px bg-slate-200 hidden sm:block"></div>
                 <div className="flex items-center gap-3">
                     <div className="hidden flex-col text-right xl:flex">

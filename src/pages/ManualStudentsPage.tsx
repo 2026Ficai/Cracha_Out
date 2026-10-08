@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { 
   ArrowLeft, Check, Save, Plus, Trash2, Printer, X, FileSpreadsheet, 
-  UserSquare2, ClipboardPaste, AlertTriangle, Info, Upload, Download, HelpCircle,
+  UserSquare2, ClipboardPaste, AlertTriangle, Info, Upload, Download, FileText, HelpCircle,
   Type, Palette, Image, ZoomIn
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -1120,9 +1120,21 @@ export default function ManualStudentsPage() {
               </h2>
               <p className="text-[#48689f] text-sm mt-0.5 font-medium">Cadastre os alunos e prepare os crachás para a sessão de cinema.</p>
           </div>
-          <div className="hidden md:block">
-              {/* Optional space for future header actions */}
-          </div>
+          <a
+            href="/formularios/autorizacao-projeto-escola-vai-ao-cinema.pdf"
+            download="Autorização - Projeto A Escola Vai ao Cinema.pdf"
+            className="group mt-1 flex w-full items-center gap-3 rounded-2xl border border-cyan-200 bg-gradient-to-r from-white via-cyan-50 to-blue-50 px-3.5 py-2.5 text-left shadow-sm transition-all hover:-translate-y-px hover:border-cyan-400 hover:shadow-md md:mt-0 md:w-auto md:min-w-[255px]"
+            aria-label="Baixar formulário de autorização do projeto A Escola Vai ao Cinema"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#073780] to-[#00A8CC] text-white shadow-sm">
+              <FileText className="h-4.5 w-4.5" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[11px] font-black uppercase tracking-wide text-[#073780]">Formulário de autorização</span>
+              <span className="block truncate text-[10px] font-medium text-[#5671a3]">Projeto A Escola Vai ao Cinema</span>
+            </span>
+            <Download className="h-4 w-4 shrink-0 text-cyan-700 transition-transform group-hover:translate-y-0.5" />
+          </a>
       </div>
 
       {/* Header Controls & Summary */}

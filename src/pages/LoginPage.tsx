@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Download, FileText, Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -62,6 +62,26 @@ export default function LoginPage() {
               {error}
             </div>
           )}
+
+          <section className="mb-6 rounded-xl border border-blue-100 bg-gradient-to-r from-blue-50 via-white to-cyan-50 p-3.5 shadow-sm" aria-labelledby="authorization-form-title">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-800 to-cyan-600 text-white shadow-sm">
+                <FileText className="h-5 w-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h4 id="authorization-form-title" className="text-sm font-extrabold text-navy-900">Formulário de autorização</h4>
+                <p className="mt-0.5 text-xs leading-relaxed text-slate-500">Baixe o documento do projeto antes de acessar o sistema.</p>
+              </div>
+            </div>
+            <a
+              href="/formularios/autorizacao-projeto-escola-vai-ao-cinema.pdf"
+              download="Autorização - Projeto A Escola Vai ao Cinema.pdf"
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-cyan-600 bg-white px-3 py-2.5 text-xs font-extrabold text-cyan-700 shadow-sm transition-all hover:-translate-y-px hover:bg-cyan-600 hover:text-white hover:shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
+            >
+              <Download className="h-4 w-4" />
+              Baixar formulário (PDF)
+            </a>
+          </section>
 
           <form onSubmit={handleLogin} className="space-y-5">
             <div>

@@ -39,16 +39,41 @@ export default function Dashboard() {
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
+      // O Supabase limita cada consulta a 1.000 linhas por padrão. A paginação
+      // garante que as métricas e os rankings não parem no milésimo aluno.
+      const fetchAllStudents = async () => {
+        const pageSize = 1000;
+        const allStudents: { id: string; school_id: string | null; class_name: string | null }[] = [];
+        let from = 0;
+
+        while (true) {
+          const { data, error } = await supabase
+            .from('students')
+            .select('id, school_id, class_name')
+            .range(from, from + pageSize - 1);
+
+          if (error) throw error;
+
+          const page = data || [];
+          allStudents.push(...page);
+
+          if (page.length < pageSize) break;
+          from += pageSize;
+        }
+
+        return allStudents;
+      };
+
       const [schoolsRes, usersRes, classesRes, studentsRes, serversRes] = await Promise.all([
         supabase.from('schools').select('id, name'),
         supabase.from('app_users').select('id', { count: 'exact', head: true }),
         supabase.from('classes').select('id', { count: 'exact', head: true }),
-        supabase.from('students').select('id, school_id, class_name'),
+        fetchAllStudents(),
         supabase.from('servers').select('id, school_id')
       ]);
 
       const schools = schoolsRes.data || [];
-      const students = studentsRes.data || [];
+      const students = studentsRes;
       const servers = serversRes.data || [];
 
       const totalSchools = schools.length;
