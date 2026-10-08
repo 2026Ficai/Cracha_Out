@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { 
   ArrowLeft, Check, Save, Plus, Trash2, Printer, X, FileSpreadsheet, 
-  UserSquare2, ClipboardPaste, AlertTriangle, Info, Upload, Download, FileSignature, HelpCircle, Loader2,
+  UserSquare2, ClipboardPaste, AlertTriangle, Info, Upload, Download, FileSignature, HelpCircle, Loader2, Settings2, RotateCcw,
   Type, Palette, Image, ZoomIn
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -34,6 +34,21 @@ interface DraftStudent {
   school_id: string | null;
   selected: boolean;
 }
+
+interface AuthorizationTemplateText {
+  title: string;
+  projectTitle: string;
+  period: string;
+  authorizationText: string;
+}
+
+const AUTHORIZATION_TEXT_STORAGE_KEY = 'cracha_authorization_template_text';
+const DEFAULT_AUTHORIZATION_TEMPLATE: AuthorizationTemplateText = {
+  title: 'TERMO DE AUTORIZAÇÃO PARA PARTICIPAÇÃO EM AÇÃO PEDAGÓGICA',
+  projectTitle: 'A ESCOLA VAI AO CINEMA',
+  period: '13 A 23 DE OUTUBRO DE 2026.',
+  authorizationText: 'regularmente matriculado(a) na Rede Municipal de Educação de Itaguaí, AUTORIZO sua participação na AÇÃO PEDAGÓGICA – A ESCOLA VAI AO CINEMA que consistirá em sessão de cinema no CINE SERCLA – SHOPPING PÁTIO MIX, localizado na Rodovia Rio Santos, s/n – Santana – CEP: 23812-101 – Itaguaí – RJ, quando serão exibidos os filmes:'
+};
 
 const generateId = () => {
   return typeof crypto !== 'undefined' && crypto.randomUUID 
@@ -77,6 +92,8 @@ export default function ManualStudentsPage() {
   const [isTourOpen, setIsTourOpen] = useState(false);
   const [isLoadingDB, setIsLoadingDB] = useState(false);
   const [isGeneratingAuthorizations, setIsGeneratingAuthorizations] = useState(false);
+  const [isAuthorizationEditorOpen, setIsAuthorizationEditorOpen] = useState(false);
+  const [authorizationTemplate, setAuthorizationTemplate] = useState<AuthorizationTemplateText>(DEFAULT_AUTHORIZATION_TEMPLATE);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [headerRibbonUrl, setHeaderRibbonUrl] = useState('/fita-cinema.png');
   const [badgeBackgroundUrl, setBadgeBackgroundUrl] = useState<string | null>(null);
@@ -187,6 +204,17 @@ export default function ManualStudentsPage() {
       }
     };
     loadSettings();
+  }, []);
+
+  useEffect(() => {
+    try {
+      const savedTemplate = localStorage.getItem(AUTHORIZATION_TEXT_STORAGE_KEY);
+      if (savedTemplate) {
+        setAuthorizationTemplate({ ...DEFAULT_AUTHORIZATION_TEMPLATE, ...JSON.parse(savedTemplate) });
+      }
+    } catch {
+      localStorage.removeItem(AUTHORIZATION_TEXT_STORAGE_KEY);
+    }
   }, []);
 
   useEffect(() => {
@@ -887,6 +915,11 @@ export default function ManualStudentsPage() {
         }
         page.drawText(value, { x, y, size: fontSize, font, color: black });
       };
+      const drawCenteredText = (page: ReturnType<typeof authorizationDocument.addPage>, value: string, y: number, maxWidth: number, initialSize: number) => {
+        let fontSize = initialSize;
+        while (font.widthOfTextAtSize(value, fontSize) > maxWidth && fontSize > 7) fontSize -= 0.25;
+        page.drawText(value, { x: (595.32 - font.widthOfTextAtSize(value, fontSize)) / 2, y, size: fontSize, font, color: black });
+      };
 
       for (const student of authorizationStudents) {
         const [templatePage] = await authorizationDocument.copyPages(templateDocument, [0]);
@@ -898,6 +931,31 @@ export default function ManualStudentsPage() {
         const studentName = student.full_name.trim().toUpperCase();
         drawFittedText(templatePage, schoolName, 204, 713, 320);
         drawFittedText(templatePage, studentName, 255, 585, 275);
+
+        // Só mascaramos áreas alteradas; o restante do PDF original continua inalterado.
+        if (authorizationTemplate.title !== DEFAULT_AUTHORIZATION_TEMPLATE.title) {
+          templatePage.drawRectangle({ x: 55, y: 739, width: 485, height: 20, color: rgb(1, 1, 1) });
+          drawCenteredText(templatePage, authorizationTemplate.title.toUpperCase(), 748, 470, 10.5);
+        }
+        if (authorizationTemplate.projectTitle !== DEFAULT_AUTHORIZATION_TEMPLATE.projectTitle) {
+          templatePage.drawRectangle({ x: 110, y: 663, width: 375, height: 18, color: rgb(1, 1, 1) });
+          drawCenteredText(templatePage, authorizationTemplate.projectTitle.toUpperCase(), 674, 360, 11);
+        }
+        if (authorizationTemplate.period !== DEFAULT_AUTHORIZATION_TEMPLATE.period) {
+          templatePage.drawRectangle({ x: 110, y: 648, width: 375, height: 16, color: rgb(1, 1, 1) });
+          drawCenteredText(templatePage, authorizationTemplate.period.toUpperCase(), 656, 360, 9.5);
+        }
+        if (authorizationTemplate.authorizationText !== DEFAULT_AUTHORIZATION_TEMPLATE.authorizationText) {
+          templatePage.drawRectangle({ x: 16, y: 503, width: 565, height: 66, color: rgb(1, 1, 1) });
+          const lines = authorizationTemplate.authorizationText.trim().split(/\s+/).reduce<string[]>((result, word) => {
+            const current = result[result.length - 1] || '';
+            const candidate = current ? `${current} ${word}` : word;
+            if (font.widthOfTextAtSize(candidate, 9.5) > 555) result.push(word);
+            else result[result.length - 1] = candidate;
+            return result;
+          }, ['']);
+          lines.slice(0, 5).forEach((line, lineIndex) => templatePage.drawText(line, { x: 18, y: 558 - lineIndex * 11, size: 9.5, font, color: black }));
+        }
       }
 
       const safeSchoolName = globalSchoolName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/(^-|-$)/g, '').toLowerCase();
@@ -919,6 +977,17 @@ export default function ManualStudentsPage() {
     } finally {
       setIsGeneratingAuthorizations(false);
     }
+  };
+
+  const saveAuthorizationTemplate = async () => {
+    localStorage.setItem(AUTHORIZATION_TEXT_STORAGE_KEY, JSON.stringify(authorizationTemplate));
+    setIsAuthorizationEditorOpen(false);
+    await showSuccess('Os textos do modelo foram salvos e serão usados nas próximas autorizações.', 'Modelo atualizado');
+  };
+
+  const resetAuthorizationTemplate = () => {
+    setAuthorizationTemplate(DEFAULT_AUTHORIZATION_TEMPLATE);
+    localStorage.removeItem(AUTHORIZATION_TEXT_STORAGE_KEY);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -1725,6 +1794,18 @@ export default function ManualStudentsPage() {
                   {isGeneratingAuthorizations ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileSignature className="w-4 h-4 text-violet-100" />}
                   <span className="hidden sm:inline">{isGeneratingAuthorizations ? 'Gerando...' : 'Gerar autorizações'}</span>
               </button>
+
+              {isAdmin && (
+                <button
+                  type="button"
+                  onClick={() => setIsAuthorizationEditorOpen(true)}
+                  className="shrink-0 px-2.5 sm:px-3 py-1.5 bg-white text-violet-800 font-bold text-xs border border-violet-200 hover:bg-violet-50 hover:border-violet-300 rounded-xl transition-all flex items-center gap-1.5 shadow-sm"
+                  title="Editar textos do modelo de autorização"
+                >
+                  <Settings2 className="w-4 h-4" />
+                  <span className="hidden lg:inline">Editar modelo</span>
+                </button>
+              )}
               
               <button 
                 onClick={handleSaveAndReturn}
@@ -1999,6 +2080,35 @@ export default function ManualStudentsPage() {
         skip: 'Pular'
       }}
     />
+
+    {isAdmin && isAuthorizationEditorOpen && (
+      <div className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm" onClick={() => setIsAuthorizationEditorOpen(false)}>
+        <div className="w-full max-w-3xl overflow-hidden rounded-3xl bg-white shadow-2xl" onClick={event => event.stopPropagation()}>
+          <div className="flex items-start justify-between border-b border-violet-100 bg-gradient-to-r from-violet-50 via-white to-indigo-50 px-6 py-5">
+            <div className="flex gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-violet-700 text-white shadow-md"><Settings2 className="h-5 w-5" /></div>
+              <div>
+                <h3 className="text-lg font-black text-slate-900">Editar texto do modelo</h3>
+                <p className="mt-0.5 text-xs leading-relaxed text-slate-500">A identidade visual e a estrutura do PDF original serão preservadas.</p>
+              </div>
+            </div>
+            <button type="button" onClick={() => setIsAuthorizationEditorOpen(false)} className="rounded-xl p-2 text-slate-400 transition hover:bg-white hover:text-slate-700" title="Fechar"><X className="h-5 w-5" /></button>
+          </div>
+
+          <div className="grid max-h-[70vh] gap-4 overflow-y-auto p-6 md:grid-cols-2">
+            <label className="block"><span className="mb-1.5 block text-xs font-bold text-slate-700">Título do documento</span><input value={authorizationTemplate.title} onChange={event => setAuthorizationTemplate({ ...authorizationTemplate, title: event.target.value })} className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-medium outline-none transition focus:border-violet-400 focus:bg-white focus:ring-2 focus:ring-violet-100" /></label>
+            <label className="block"><span className="mb-1.5 block text-xs font-bold text-slate-700">Nome da ação / projeto</span><input value={authorizationTemplate.projectTitle} onChange={event => setAuthorizationTemplate({ ...authorizationTemplate, projectTitle: event.target.value })} className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-medium outline-none transition focus:border-violet-400 focus:bg-white focus:ring-2 focus:ring-violet-100" /></label>
+            <label className="block md:col-span-2"><span className="mb-1.5 block text-xs font-bold text-slate-700">Período / data</span><input value={authorizationTemplate.period} onChange={event => setAuthorizationTemplate({ ...authorizationTemplate, period: event.target.value })} className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-medium outline-none transition focus:border-violet-400 focus:bg-white focus:ring-2 focus:ring-violet-100" /></label>
+            <label className="block md:col-span-2"><span className="mb-1.5 block text-xs font-bold text-slate-700">Texto de autorização</span><textarea rows={5} value={authorizationTemplate.authorizationText} onChange={event => setAuthorizationTemplate({ ...authorizationTemplate, authorizationText: event.target.value })} className="w-full resize-y rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm leading-relaxed outline-none transition focus:border-violet-400 focus:bg-white focus:ring-2 focus:ring-violet-100" /><span className="mt-1 block text-[11px] text-slate-400">O texto será ajustado dentro da área original do formulário.</span></label>
+          </div>
+
+          <div className="flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <button type="button" onClick={resetAuthorizationTemplate} className="flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-bold text-slate-600 transition hover:bg-white hover:text-violet-800"><RotateCcw className="h-4 w-4" /> Restaurar texto original</button>
+            <div className="flex gap-2"><button type="button" onClick={() => setIsAuthorizationEditorOpen(false)} className="rounded-xl px-4 py-2 text-xs font-bold text-slate-600 transition hover:bg-white">Cancelar</button><button type="button" onClick={saveAuthorizationTemplate} className="rounded-xl bg-violet-700 px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-violet-800">Salvar alterações</button></div>
+          </div>
+        </div>
+      </div>
+    )}
 
     {/* Modal Flutuante de Zoom Ampliado */}
     {isZoomModalOpen && (

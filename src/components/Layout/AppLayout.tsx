@@ -57,7 +57,7 @@ const AppLayout = () => {
                   <span className="flex h-5 w-5 items-center justify-center rounded-md bg-white text-cyan-600 shadow-sm">
                     <FileText className="h-3.5 w-3.5" />
                   </span>
-                  <span className="hidden text-xs font-extrabold leading-none lg:block">Modelo em branco</span>
+                  <span className="hidden text-xs font-extrabold leading-none lg:block">Modelo da Autorização em branco</span>
                   <Download className="hidden h-3.5 w-3.5 text-blue-600 transition-transform group-hover:translate-y-0.5 lg:block" />
                 </a>
                 <div className="h-8 w-px bg-slate-200 hidden sm:block"></div>
